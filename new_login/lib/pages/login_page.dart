@@ -9,7 +9,7 @@ final signinEmailWordController = TextEditingController();
 
 double w = 0.0;
 double h = 0.0;
-final Color _primaryColor = Color(0xFF36306D);
+final Color primaryColor = Color(0xFF36306D);
 
 class LoginPage extends StatefulWidget {
   const LoginPage({
@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
         // appBar: AppBar(
         //     title: Text(widget.title),
         // ),
-        backgroundColor: _primaryColor,
+        backgroundColor: primaryColor,
         body: SafeArea(
           child: Column(
             children: [
@@ -263,7 +263,7 @@ class __loginState extends State<_login> {
               height: h * 0.03,
             ),
             // CircleAvatar(
-            //   // backgroundColor: _primaryColor,
+            //   // backgroundColor: primaryColor,
             //   backgroundColor: Colors.pink,
             //   radius: w*0.2,
             //   child: CircleAvatar(backgroundImage: AssetImage( 'assets/images/facebook.jpg',),
@@ -333,7 +333,7 @@ class __loginState extends State<_login> {
 
 textButton(title) => Material(
       borderRadius: BorderRadius.circular(23),
-      color: _primaryColor,
+      color: primaryColor,
       elevation: 5,
       child: Container(
         alignment: Alignment.center,

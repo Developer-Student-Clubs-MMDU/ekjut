@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new_login/pages/home_page.dart';
 import './login_page.dart';
 import '../models/list.dart';
 import '../widgets/multi_dropdown.dart';
@@ -180,7 +181,11 @@ class _signupState extends State<signup> {
             height: h * 0.06,
           ),
 
-          textButton('Sing Up')
+          InkWell(
+            onTap: (){Navigator.push(
+              context, MaterialPageRoute(builder: (context)=>HomePage()));
+            },
+            child:textButton('Sing Up'))
         ],
       ),
     ));
