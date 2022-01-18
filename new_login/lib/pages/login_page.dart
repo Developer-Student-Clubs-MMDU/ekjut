@@ -332,6 +332,7 @@ class __loginState extends State<_login> {
 
 
 textButton(title) => Material(
+      // shape: CircleBorder(side: BorderSide.none),
       borderRadius: BorderRadius.circular(23),
       color: primaryColor,
       elevation: 5,

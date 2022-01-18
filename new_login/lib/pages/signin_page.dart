@@ -185,7 +185,7 @@ class _signupState extends State<signup> {
             onTap: (){Navigator.push(
               context, MaterialPageRoute(builder: (context)=>HomePage()));
             },
-            child:textButton('Sing Up'))
+            child:textButton('Sign Up'))
         ],
       ),
     ));
