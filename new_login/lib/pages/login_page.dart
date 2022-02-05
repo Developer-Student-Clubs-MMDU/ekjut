@@ -229,7 +229,8 @@ class __loginState extends State<_login> {
             //      primary: Colors.blue,//background color
             //  )
             //  ),
-            textButton('login'),
+            textButton('login',Color.fromRGBO(26, 41, 128, 100),
+                  Color.fromRGBO(42, 178, 252, 100),(){}),
             SizedBox(
               height: h * 0.05,
             ),
@@ -282,7 +283,7 @@ class __loginState extends State<_login> {
                     'assets/images/facebook.jpg',
                     fit: BoxFit.cover,
                   ),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.blue,
                   ),
@@ -295,7 +296,7 @@ class __loginState extends State<_login> {
                     'assets/images/google1.jpg',
                     fit: BoxFit.contain,
                   ),
-                  decoration: BoxDecoration(
+                  decoration:const  BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.blue,
                   ),
@@ -331,7 +332,7 @@ class __loginState extends State<_login> {
 
 
 
-textButton(title) => Material(
+textButton(title,Color color1, Color color2, Function onPress) => Material(
       // shape: CircleBorder(side: BorderSide.none),
       borderRadius: BorderRadius.circular(23),
       color: primaryColor,
@@ -341,12 +342,11 @@ textButton(title) => Material(
         height: h * 0.07,
         width: w * 0.3,
         decoration: BoxDecoration(
-            gradient: const LinearGradient(
+            gradient:  LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  Color.fromRGBO(26, 41, 128, 100),
-                  Color.fromRGBO(42, 178, 252, 100),
+                  color1,color2
                 ]),
             borderRadius: BorderRadius.circular(23)),
         child: Padding(

@@ -44,6 +44,7 @@ class _BuildPeopleState extends State<BuildPeople> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        print("tapped");
         Navigator.of(context).push(
           HeroDialogRoute(
             builder: (context) => Center(child: PopUpCard(id: widget.id,)),

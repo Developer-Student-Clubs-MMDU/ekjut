@@ -3,8 +3,8 @@ import 'package:new_login/pages/home_page.dart';
 import './login_page.dart';
 import '../models/list.dart';
 import '../widgets/multi_dropdown.dart';
-class signup extends StatefulWidget {
 
+class signup extends StatefulWidget {
   const signup({Key? key}) : super(key: key);
 
   @override
@@ -133,12 +133,12 @@ class _signupState extends State<signup> {
                 onTap: multiSelect,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
+                  children: const [
                     Text(
                       'Services',
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
-                    const Icon(
+                    Icon(
                       Icons.keyboard_arrow_down,
                       color: Colors.white,
                     )
@@ -182,10 +182,12 @@ class _signupState extends State<signup> {
           ),
 
           InkWell(
-            onTap: (){Navigator.push(
-              context, MaterialPageRoute(builder: (context)=>HomePage()));
-            },
-            child:textButton('Sign Up'))
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomePage()));
+              },
+              child: textButton('Sign Up', Color.fromRGBO(26, 41, 128, 100),
+                  Color.fromRGBO(42, 178, 252, 100), () {}))
         ],
       ),
     ));
