@@ -1,3 +1,4 @@
+import 'package:ekjut/pages/get_location.dart';
 import 'package:ekjut/wigets/button.dart';
 import 'package:ekjut/wigets/input.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class _SignupScreenState extends State<SignupScreen> {
     final _width = MediaQuery.of(context).size.width;
     final _emailcontroller = TextEditingController();
     final _namedcontroller = TextEditingController();
-    final _locationdcontroller = TextEditingController();
+    // final _locationdcontroller = TextEditingController();
     final _servivecontroller = TextEditingController();
 
     return Container(
@@ -40,11 +41,48 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
           const SizedBox(height: 30),
           GestureDetector(
-            onTap: () {},
-            child: InputWidget(
-              icon: FontAwesomeIcons.map,
-              label: "Location",
-              controller: _locationdcontroller,
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const GetMyLocation()));
+            },
+            child: Container(
+              height: 60,
+              width: double.maxFinite,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6.0),
+                color: const Color(0xFF1C173D),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.25),
+                    spreadRadius: 0,
+                    blurRadius: 4,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  children: [
+                    Icon(
+                      FontAwesomeIcons.map,
+                      size: 18,
+                      color: Colors.grey[400],
+                    ),
+                    const SizedBox(width: 14),
+                    Text(
+                      "Location",
+                      style: TextStyle(
+                          color: Colors.grey[400],
+                          fontFamily: "Roboto",
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 30),

@@ -10,6 +10,6 @@ class GetMyLocation extends StatefulWidget {
 class _GetMyLocationState extends State<GetMyLocation> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(body: Container());
   }
 }
