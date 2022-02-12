@@ -1,8 +1,13 @@
+import 'package:ekjut/api/changing_location.dart';
 import 'package:ekjut/pages/get_location.dart';
+import 'package:ekjut/pages/get_timings.dart';
 import 'package:ekjut/wigets/button.dart';
 import 'package:ekjut/wigets/input.dart';
+import 'package:ekjut/wigets/userlocation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/src/provider.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -12,6 +17,21 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  // for entering location of user into list
+  List<double> list = [];
+
+  // calling get location function for taking user's location as input
+  void getlocation() async {
+    UserLocation location = UserLocation();
+    list = await location.getUserLocation();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getlocation();
+  }
+
   @override
   Widget build(BuildContext context) {
     final _height = MediaQuery.of(context).size.height;
@@ -42,48 +62,140 @@ class _SignupScreenState extends State<SignupScreen> {
           const SizedBox(height: 30),
           GestureDetector(
             onTap: () {
+              if (list.isEmpty) {
+                Fluttertoast.showToast(
+                    msg: "We are enable to detect your location");
+                return;
+                // print('empty');
+              }
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const GetMyLocation()));
-            },
-            child: Container(
-              height: 60,
-              width: double.maxFinite,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6.0),
-                color: const Color(0xFF1C173D),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
-                    spreadRadius: 0,
-                    blurRadius: 4,
-                    offset: const Offset(0, 4),
+                context,
+                MaterialPageRoute(
+                  builder: (context) => GetMyLocation(
+                    list: list,
                   ),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  children: [
-                    Icon(
-                      FontAwesomeIcons.map,
-                      size: 18,
-                      color: Colors.grey[400],
-                    ),
-                    const SizedBox(width: 14),
-                    Text(
-                      "Location",
-                      style: TextStyle(
-                          color: Colors.grey[400],
-                          fontFamily: "Roboto",
-                          fontWeight: FontWeight.w700,
-                          fontSize: 12),
-                    )
-                  ],
                 ),
-              ),
-            ),
+              );
+            },
+            child: context.watch<ChangeLocation>().foundLocation
+                ? Column(
+                    children: [
+                      Container(
+                        height: 60,
+                        width: double.maxFinite,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6.0),
+                          color: const Color(0xFF1C173D),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.25),
+                              spreadRadius: 0,
+                              blurRadius: 4,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.map,
+                                size: 18,
+                                color: Colors.grey[400],
+                              ),
+                              const SizedBox(width: 14),
+                              Text(
+                                context.watch<ChangeLocation>().source,
+                                style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontFamily: "Roboto",
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 12),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      Container(
+                        height: 60,
+                        width: double.maxFinite,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6.0),
+                          color: const Color(0xFF1C173D),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.25),
+                              spreadRadius: 0,
+                              blurRadius: 4,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.map,
+                                size: 18,
+                                color: Colors.grey[400],
+                              ),
+                              const SizedBox(width: 14),
+                              Text(
+                                context.watch<ChangeLocation>().destination,
+                                style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontFamily: "Roboto",
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 12),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : Container(
+                    height: 60,
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6.0),
+                      color: const Color(0xFF1C173D),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.25),
+                          spreadRadius: 0,
+                          blurRadius: 4,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Row(
+                        children: [
+                          Icon(
+                            FontAwesomeIcons.map,
+                            size: 18,
+                            color: Colors.grey[400],
+                          ),
+                          const SizedBox(width: 14),
+                          Text(
+                            "Location",
+                            style: TextStyle(
+                                color: Colors.grey[400],
+                                fontFamily: "Roboto",
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
           ),
           const SizedBox(height: 30),
           InputWidget(

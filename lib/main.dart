@@ -1,8 +1,19 @@
+import 'package:ekjut/api/changing_location.dart';
+import 'package:ekjut/api/location_api.dart';
 import 'package:ekjut/pages/register_page.dart';
 import 'package:flutter/material.dart';
+import 'package:here_sdk/core.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  SdkContext.init(IsolateOrigin.main);
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => LocationApi()),
+      ChangeNotifierProvider(create: (_) => ChangeLocation()),
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
