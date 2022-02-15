@@ -5,12 +5,13 @@ class IconWidget extends StatelessWidget {
   final IconData icon;
   final Function onPress;
   final Color color;
-
+  final double? size;
   const IconWidget({
     Key? key,
     required this.onPress,
     required this.icon,
     required this.color,
+    this.size,
   }) : super(key: key);
 
   @override
@@ -35,6 +36,7 @@ class IconWidget extends StatelessWidget {
           ),
           child: Icon(
             icon,
+            size: size,
             color: Colors.white,
           )), //
     );

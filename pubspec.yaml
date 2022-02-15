@@ -42,6 +42,7 @@ dependencies:
   http: ^0.13.3
   fluttertoast: ^8.0.8
   provider: ^6.0.1
+  flutter_keyboard_visibility: ^5.1.1
 
   here_sdk:
     path: plugins/here_sdk

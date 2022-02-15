@@ -1,3 +1,4 @@
+import 'package:ekjut/pages/homepage.dart';
 import 'package:ekjut/wigets/button.dart';
 import 'package:ekjut/wigets/circular_icon.dart';
 import 'package:ekjut/wigets/input.dart';
@@ -52,7 +53,10 @@ class _LoginScreenState extends State<LoginScreen> {
           ButtonWidget(
             width: _width * 0.5,
             label: "Login",
-            onPress: () {},
+            onPress: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+            },
           ),
           SizedBox(height: _height * 0.06),
           Row(children: <Widget>[
