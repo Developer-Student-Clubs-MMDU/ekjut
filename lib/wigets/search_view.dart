@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:ekjut/api/changing_location.dart';
 import 'package:ekjut/api/location_api.dart';
 import 'package:ekjut/wigets/place.dart';

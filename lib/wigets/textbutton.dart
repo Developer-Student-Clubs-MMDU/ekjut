@@ -5,7 +5,7 @@ textButton(title, Color color1, Color color2, Function onPress,
     Material(
       // shape: CircleBorder(side: BorderSide.none),
       borderRadius: BorderRadius.circular(23),
-      color: Color(0xFF36306D),
+      color: const Color(0xFF36306D),
       elevation: 5,
       child: Container(
         alignment: Alignment.center,

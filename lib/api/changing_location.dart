@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:latlong2/latlong.dart' as latLng;
@@ -7,11 +9,10 @@ class ChangeLocation extends ChangeNotifier {
   bool foundLocation = false;
 
   String source = '', destination = '';
-  bool foundSource = false, foundDestination = false,alreadyAddedPAth = false;
+  bool foundSource = false, foundDestination = false, alreadyAddedPAth = false;
   latLng.LatLng userLocation = latLng.LatLng(28.6697905, 77.3439278);
   latLng.LatLng sourcePosition = latLng.LatLng(28.6697905, 77.3439278);
   latLng.LatLng destinationPosition = latLng.LatLng(28.6697905, 77.3439278);
- 
 
   getUserLocation(latLng.LatLng pos) {
     userLocation = pos;
@@ -19,8 +20,8 @@ class ChangeLocation extends ChangeNotifier {
     destinationPosition = userLocation;
     notifyListeners();
   }
-  
-  sourceLocation(String value)  {
+
+  sourceLocation(String value) {
     foundLocation = true;
     source = value;
     foundSource = true;
@@ -33,7 +34,7 @@ class ChangeLocation extends ChangeNotifier {
     notifyListeners();
   }
 
-  destinationLocation(String value)  {
+  destinationLocation(String value) {
     foundLocation = true;
     destination = value;
     foundDestination = true;

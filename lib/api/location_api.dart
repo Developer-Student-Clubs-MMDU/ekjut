@@ -1,8 +1,9 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'package:ekjut/wigets/place.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geocoding/geocoding.dart';
-
 
 class LocationApi extends ChangeNotifier {
   List<Place> places = [];
@@ -32,9 +33,9 @@ class LocationApi extends ChangeNotifier {
       locations.forEach(
         (location) async {
           print(location);
-          List<Placemark> placeMarks =
-              await placemarkFromCoordinates(location.latitude, location.longitude);
-              // await placemarkFromCoordinates(30.2602523, 77.0449321);
+          List<Placemark> placeMarks = await placemarkFromCoordinates(
+              location.latitude, location.longitude);
+          // await placemarkFromCoordinates(30.2602523, 77.0449321);
 
           placeMarks.forEach((placemark) {
             print(placemark.name);

@@ -1,3 +1,6 @@
+// ignore_for_file: unused_import
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:ekjut/api/changing_location.dart';
 import 'package:ekjut/api/location_api.dart';
 import 'package:ekjut/pages/homepage.dart';
@@ -6,7 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:here_sdk/core.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SdkContext.init(IsolateOrigin.main);
   runApp(MultiProvider(
     providers: [
@@ -27,8 +32,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen(),
-      // home:const MyHomePage(),
+      // home: const HomeScreen(),
+      home: const MyHomePage(),
     );
   }
 }

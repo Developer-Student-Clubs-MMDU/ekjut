@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "211027940596",
+    "project_id": "ekjut-e2dc1",
+    "storage_bucket": "ekjut-e2dc1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211027940596:android:359db738007fa6a4defaa1",
+        "android_client_info": {
+          "package_name": "com.example.ekjut"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "211027940596-f0tteccs9b58gpko77cdhcp8add9mcfv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-dZ5uZ47kCy9ib2dopSy8ThDghIL_zQM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "211027940596-f0tteccs9b58gpko77cdhcp8add9mcfv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
