@@ -1,5 +1,6 @@
 // ignore_for_file: unused_import
 
+import 'package:ekjut/api/helps.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:ekjut/api/changing_location.dart';
 import 'package:ekjut/api/location_api.dart';
@@ -17,6 +18,7 @@ Future main() async {
     providers: [
       ChangeNotifierProvider(create: (_) => LocationApi()),
       ChangeNotifierProvider(create: (_) => ChangeLocation()),
+      ChangeNotifierProvider(create: (_) => Help())
     ],
     child: const MyApp(),
   ));
@@ -32,8 +34,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // home: const HomeScreen(),
-      home: const MyHomePage(),
+      home: const HomeScreen(),
+      // home: const MyHomePage(),
     );
   }
 }

@@ -37,14 +37,14 @@ class LocationApi extends ChangeNotifier {
               location.latitude, location.longitude);
           // await placemarkFromCoordinates(30.2602523, 77.0449321);
 
-          placeMarks.forEach((placemark) {
+          for (var placemark in placeMarks) {
             print(placemark.name);
             addPlace(Place(
                 name: placemark.name.toString(),
                 street: placemark.street.toString(),
                 locality: placemark.locality.toString(),
                 country: placemark.country.toString()));
-          });
+          }
         },
       );
     } on Exception catch (e) {

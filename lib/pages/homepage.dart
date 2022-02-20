@@ -1,19 +1,26 @@
 // ignore_for_file: avoid_print
 
+import 'package:ekjut/api/changing_location.dart';
+import 'package:ekjut/api/helps.dart';
 import 'package:ekjut/models/services.dart';
 import 'package:ekjut/models/services.dart';
 import 'package:ekjut/models/services.dart';
 import 'package:ekjut/pages/home_pages.dart';
+import 'package:ekjut/pages/map.dart';
 import 'package:ekjut/wigets/bottomsheet_list.dart';
 import 'package:ekjut/wigets/build_circle.dart';
 import 'package:ekjut/wigets/build_people.dart';
 import 'package:ekjut/wigets/button.dart';
 import 'package:ekjut/wigets/circular_icon.dart';
+import 'package:ekjut/wigets/help_list.dart';
+import 'package:latlong2/latlong.dart' as latLng;
 import 'package:ekjut/wigets/input.dart';
 import 'package:ekjut/wigets/multi_choice.dart';
 import 'package:ekjut/wigets/red_button.dart';
+import 'package:ekjut/wigets/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/src/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -26,13 +33,45 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isSwipeUp = false;
   bool isSwipeRight = false;
   bool isTap = false;
+  TextEditingController descriptionController = TextEditingController();
+  int i = 0;
   List<String> selectedServicesList = [];
+  List<Map<String, dynamic>> serviceList = [];
+
+  selectServices(String service) {
+    serviceList = Provider.of<Help>(context, listen: false).getService(service);
+  }
+
+  void addHelpToList() {
+    latLng.LatLng loc = context.read<ChangeLocation>().helpPosition;
+    if (loc == latLng.LatLng(28.6697905, 77.3439278)) {
+      // TO DO -- CURRENT POSITION OF DEVICE BY DEFAULT
+      loc = latLng.LatLng(28.6697905, 77.3439278);
+    }
+    context.read<Help>().addHelp({
+      'description': descriptionController.text,
+      'service': 'Service 1',
+      'distance': '100',
+      'isSwipUp': false,
+      'help': 'xyz',
+      'name': 'xyx1',
+      'isShow': false,
+      'location': loc,
+    });
+    descriptionController.text = "";
+    context.read<ChangeLocation>().afterAddHelp();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // TO DO : UPDATE LOCATION OF USER
+    context.watch<Help>().updateDistance([0, 0]);
+
     final _userLocation = TextEditingController();
 
     final _height = MediaQuery.of(context).size.height;
     final _width = MediaQuery.of(context).size.width;
+
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -123,27 +162,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 const Positioned(
                   top: 200,
                   left: 200,
-                  child: BuildPeople(id: "Mohit"),
+                  child: BuildPeople(id: "Mohit", index: 0),
                 ),
                 const Positioned(
                   top: 390,
                   left: 230,
-                  child: BuildPeople(id: "Sakshi"),
+                  child: BuildPeople(id: "Sakshi", index: 1),
                 ),
                 const Positioned(
                   top: 300,
                   left: 120,
-                  child: BuildPeople(id: "Gopi bhau"),
+                  child: BuildPeople(id: "XYZ", index: 2),
                 ),
                 const Positioned(
                   top: 450,
                   left: 100,
-                  child: BuildPeople(id: "chota haluman"),
+                  child: BuildPeople(id: "ABC", index: 3),
                 ),
                 const Positioned(
                   top: 500,
                   left: 200,
-                  child: BuildPeople(id: "sakshi2"),
+                  child: BuildPeople(id: "QWDUI", index: 4),
                 ),
                 AnimatedPositioned(
                   curve: Curves.decelerate,
@@ -191,6 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Container(
                             width: _width * 0.80,
                             height: _height * 0.60,
+                            padding: const EdgeInsets.all(20.0),
                             decoration: const BoxDecoration(
                               color: Color(0xFF1C173D),
                               borderRadius: BorderRadius.only(
@@ -199,125 +239,140 @@ class _HomeScreenState extends State<HomeScreen> {
                                 bottomRight: Radius.circular(6),
                               ),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Column(
-                                // mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Help",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            // fontFamily: "Roboto",
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 15),
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            isSwipeRight = false;
-                                          });
-                                        },
-                                        child: const Icon(
-                                          Icons.close,
-                                          size: 24,
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  InputWidget(
-                                    icon: FontAwesomeIcons.map,
-                                    label: 'Location',
-                                    controller: _userLocation,
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "Services:",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            // fontFamily: "Roboto",
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 15),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: ListView(
-                                      scrollDirection: Axis.horizontal,
-                                      shrinkWrap: false,
-                                      children: [
-                                        MultiSelectChip(
-                                          servicesItem,
-                                          onSelectionChanged: (selectedList) {
-                                            setState(() {
-                                              selectedServicesList =
-                                                  selectedList;
-                                              // print(selectedMonthList);
-                                            });
-                                          },
-                                          maxSelection: 7,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "Description:",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            // fontFamily: "Roboto",
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 15),
-                                      ),
-                                    ),
-                                  ),
-                                  const TextField(
-                                    style: TextStyle(color: Color(0xFFbdc6cf)),
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Color(0xFF36306D),
-                                      border: OutlineInputBorder(),
-                                      hintText:
-                                          'Enter a description of the help(optional)',
-                                    ),
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: 5,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
+                            child: SingleChildScrollView(
+                              child: Container(
+                                width: _width * 0.80,
+                                height: _height * 0.60,
+                                child: Column(
+                                  // mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        RedButton(
-                                          width: _width * 0.3,
-                                          label: "Canel",
-                                          onPress: () {
-                                            isSwipeRight = false;
+                                        const Text(
+                                          "Help",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              // fontFamily: "Roboto",
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 15),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              isSwipeRight = false;
+                                            });
                                           },
-                                        ),
-                                        ButtonWidget(
-                                          width: _width * 0.3,
-                                          label: "Help",
-                                          onPress: () {},
-                                        ),
+                                          child: const Icon(
+                                            Icons.close,
+                                            size: 24,
+                                            color: Colors.white,
+                                          ),
+                                        )
                                       ],
                                     ),
-                                  ),
-                                ],
+                                    // InputWidget(
+                                    //   icon: FontAwesomeIcons.map,
+                                    //   label: 'Location',
+                                    //   controller: _userLocation,
+                                    // ),
+                                    const SearchViewInput(),
+                                    const SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "Services:",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              // fontFamily: "Roboto",
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 15),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: ListView(
+                                        scrollDirection: Axis.horizontal,
+                                        shrinkWrap: false,
+                                        children: [
+                                          MultiSelectChip(
+                                            servicesItem,
+                                            onSelectionChanged: (selectedList) {
+                                              setState(() {
+                                                selectedServicesList =
+                                                    selectedList;
+                                                // print(selectedMonthList);
+                                              });
+                                            },
+                                            maxSelection: 1,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "Description:",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              // fontFamily: "Roboto",
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 15),
+                                        ),
+                                      ),
+                                    ),
+                                    SingleChildScrollView(
+                                      child: TextField(
+                                        controller: descriptionController,
+                                        style: const TextStyle(
+                                            color: Color(0xFFbdc6cf)),
+                                        decoration: const InputDecoration(
+                                          filled: true,
+                                          fillColor: Color(0xFF36306D),
+                                          border: OutlineInputBorder(),
+                                          hintText:
+                                              'Enter a description of the help(optional)',
+                                        ),
+                                        keyboardType: TextInputType.multiline,
+                                        // maxLines: 4,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          RedButton(
+                                            width: _width * 0.3,
+                                            label: "Cancel",
+                                            onPress: () {
+                                              isSwipeRight = false;
+                                            },
+                                          ),
+                                          ButtonWidget(
+                                            width: _width * 0.3,
+                                            label: "Help",
+                                            onPress: () {
+                                              isSwipeRight = false;
+                                              addHelpToList();
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -414,18 +469,36 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: IconWidget(
                                             color: Colors.red,
                                             icon: Icons.food_bank,
-                                            onPress: () {},
+                                            onPress: () {
+                                              print(
+                                                  'Inside Service Categories');
+                                              i = index;
+                                              selectServices(
+                                                  servicesItem[index]);
+                                              setState(() {
+                                                isSwipeUp = true;
+                                                serviceItemSwipUp[index] = true;
+                                              });
+                                            },
                                           ),
                                         ),
                                         Text(
                                           servicesItem[index],
                                           style: const TextStyle(
                                               color: Colors.white),
-                                        )
+                                        ),
                                       ],
                                     );
                                   }),
                             ),
+                            isSwipeUp && serviceItemSwipUp[i]
+                                ? Expanded(
+                                    child: HelpList(
+                                      service: servicesItem[i],
+                                      serviceList: serviceList,
+                                    ),
+                                  )
+                                : Container(),
                           ],
                         ),
                       ),
@@ -437,6 +510,23 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class SearchViewInput extends StatelessWidget {
+  const SearchViewInput({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: SearchView(
+          hintText: 'Location',
+          wantSuggestions: false,
+          indicatorNode: 2,
+          isPadding: false),
     );
   }
 }

@@ -531,6 +531,7 @@ class _HomePageState extends State<HomePage> {
                 posW: w1,
                 posH: h1,
                 id: randstr,
+                index:0,
               ));
               // iD.add(id(tag:randstr));
             });

@@ -6,14 +6,19 @@ import 'package:ekjut/wigets/place.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class SearchView extends StatefulWidget {
   bool wantSuggestions;
   String hintText;
   int indicatorNode;
+  bool? isPadding;
   SearchView(
-      {required this.wantSuggestions,
+      {Key? key,
+      required this.wantSuggestions,
       required this.hintText,
-      required this.indicatorNode});
+      required this.indicatorNode,
+      this.isPadding})
+      : super(key: key);
 
   @override
   _SearchViewState createState() => _SearchViewState();
@@ -32,16 +37,24 @@ class _SearchViewState extends State<SearchView> {
       } else if (widget.indicatorNode == 1 &&
           context.read<ChangeLocation>().destination != '') {
         return context.read<ChangeLocation>().destination;
+      } else if (widget.indicatorNode == 2 &&
+          context.read<ChangeLocation>().helpPos != '') {
+        return context.read<ChangeLocation>().helpPos;
       }
       return "";
     }
+
+    print('build ...');
+    print(widget.wantSuggestions);
 
     return SingleChildScrollView(
       child: SearchInjector(
         child: Consumer2<LocationApi, ChangeLocation>(
           builder: (_, api, locationValue, child) => SingleChildScrollView(
             child: Container(
-              padding: const EdgeInsets.all(16),
+              padding: widget.isPadding == false
+                  ? const EdgeInsets.all(0)
+                  : const EdgeInsets.all(16),
               child: Column(
                 children: [
                   Container(
@@ -77,6 +90,7 @@ class _SearchViewState extends State<SearchView> {
                         setState(() {
                           widget.wantSuggestions = true;
                           containerSuggestions = true;
+                          print(widget.wantSuggestions);
                         });
                       },
                       controller: api.addressController,
@@ -98,10 +112,12 @@ class _SearchViewState extends State<SearchView> {
                     child: Container(
                       color: Colors.blue[100]!.withOpacity(0.3),
                       width: MediaQuery.of(context).size.width,
-                      height: 300,
+                      height: 150,
                       child: StreamBuilder<List<Place>>(
                         stream: api.controllerOut,
                         builder: (context, snapshot) {
+                          print('Inside Builder');
+                          print(widget.wantSuggestions);
                           if (snapshot.data == null) {
                             return const Center(
                                 child: Text('No Address Found'));
@@ -144,6 +160,18 @@ class _SearchViewState extends State<SearchView> {
                                                   .read<ChangeLocation>()
                                                   .destinationLocationPosition(
                                                       '${place.name}, ${place.street}, ${place.country}');
+                                            }
+                                            if (widget.indicatorNode == 2) {
+                                              context
+                                                  .read<ChangeLocation>()
+                                                  .helpLocation(
+                                                      '${place.name}, ${place.street}, ${place.country}');
+
+                                              context
+                                                  .read<ChangeLocation>()
+                                                  .helpLocationPosition(
+                                                      '${place.name}, ${place.street}, ${place.country}');
+                                              widget.wantSuggestions = false;
                                             }
 
                                             api.addressController.text =

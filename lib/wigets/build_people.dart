@@ -1,5 +1,8 @@
+import 'package:ekjut/api/helps.dart';
+import 'package:ekjut/pages/map.dart';
 import 'package:ekjut/wigets/hero_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 // import '../models/hero_dialog.dart';
 // import '../pages/home_page.dart';
 // class BuildPeople extends StatelessWidget {
@@ -27,7 +30,13 @@ class BuildPeople extends StatefulWidget {
   final double? posH;
   final double? posW;
   final String id;
-  const BuildPeople({Key? key, final this.posH, this.posW, required this.id})
+  final int index;
+  const BuildPeople(
+      {Key? key,
+      final this.posH,
+      this.posW,
+      required this.id,
+      required this.index})
       : super(key: key);
 
   @override
@@ -37,28 +46,30 @@ class BuildPeople extends StatefulWidget {
 class _BuildPeopleState extends State<BuildPeople> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        print("tapped");
-        Navigator.of(context).push(
-          HeroDialogRoute(
-            builder: (context) => Center(
-                child: PopUpCard(
-              id: widget.id,
-            )),
-            // builder: (context)=>PopUpCard2(id: widget.id)
-          ),
-        );
-      },
-      child: Hero(
-        tag: widget.id,
-        child: const Icon(
-          Icons.person_pin,
-          size: 40,
-          color: Colors.purple,
-        ),
-      ),
-    );
+    List<Map<String, dynamic>> helps = context.watch<Help>().helps;
+    return widget.index >= helps.length
+        ? Container()
+        : InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MapsPage(
+                    index: widget.index,
+                    personLocation: helps[widget.index]["location"],
+                  ),
+                ),
+              );
+            },
+            child: Hero(
+              tag: widget.id,
+              child: const Icon(
+                Icons.person_pin,
+                size: 40,
+                color: Colors.purple,
+              ),
+            ),
+          );
   }
 }
 
@@ -125,10 +136,6 @@ class _PopUpCardState extends State<PopUpCard> {
                           child: const Text('Exit'),
                           onPressed: () {
                             Navigator.pop(context);
-                            //                     Navigator.push(
-                            //                                 context,
-                            //                            MaterialPageRoute(builder: (context) => HomePage()),
-                            // );
                           },
                         ),
                       ],

@@ -10,5 +10,17 @@ List<String> servicesItem = [
   'Service 9',
   'Service 10',
 ];
+List<bool> serviceItemSwipUp = [
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+];
 
 List<String> selectedServicesItem = [];
