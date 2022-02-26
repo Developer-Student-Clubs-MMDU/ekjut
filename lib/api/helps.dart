@@ -179,12 +179,12 @@ class Help extends ChangeNotifier {
     notifyListeners();
   }
 
-  Timer _timer = new Timer(Duration(seconds: 1), () {});
+  Timer _timer = Timer(const Duration(seconds: 1), () {});
 
   // timer
   void startTimer(int index) {
     int _start = temporaryHelpList[index]["timer"];
-    const oneSec = const Duration(seconds: 1);
+    const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(
       oneSec,
       (Timer timer) {

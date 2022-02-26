@@ -12,6 +12,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   final int _current = 0;
 
+  // int _index = 0;
+
   static const List<Tab> _tabs = <Tab>[
     Tab(child: Text('Login')),
     Tab(child: Text('SignUp')),
@@ -26,7 +28,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     final _height = MediaQuery.of(context).size.height;
     final _width = MediaQuery.of(context).size.width;
 
-    final TabController _controller = TabController(length: 2, vsync: this);
+    late final TabController _controller =
+        TabController(length: 2, vsync: this);
+    int _index = 0;
+
+    callback(index) {
+      setState(() {
+        _index = index;
+        _controller.index = _index;
+        print("///////////////${_index}");
+      });
+    }
     // _controller.addListener(() {
     //   setState(() {
     //     // print('dcssssssssssssssssssssss $_current');
@@ -55,26 +67,28 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             child: Column(
               children: [
                 TabBar(
-                    indicator: BoxDecoration(
-                      color: _current == 0
-                          ? const Color(0xFF1C173D)
-                          : Colors.white,
-                      // borderRadius: BorderRadius.only(
-                      //     bottomLeft: _current == 0
-                      //         ? const Radius.circular(8.0)
-                      //         : const Radius.circular(0.0),
-                      //     bottomRight: _current == 1
-                      //         ? const Radius.circular(8.0)
-                      //         : const Radius.circular(0.0)),
-                    ),
+                    indicator: const BoxDecoration(
+                        color:
+                            // _index == 0 ?
+                            Color(0xFF1C173D)
+                        //  : Colors.white,
+                        // borderRadius: BorderRadius.only(
+                        //     bottomLeft: _current == 0
+                        //         ? const Radius.circular(8.0)
+                        //         : const Radius.circular(0.0),
+                        //     bottomRight: _current == 1
+                        //         ? const Radius.circular(8.0)
+                        //         : const Radius.circular(0.0)),
+                        ),
                     labelColor: Colors.white,
                     indicatorColor: Colors.transparent,
                     controller: _controller,
                     tabs: _tabs),
                 Expanded(
-                  child: TabBarView(controller: _controller, children: const [
-                    LoginScreen(),
-                    SignupScreen(),
+                  child: TabBarView(controller: _controller, children: [
+                    // LoginScreen(),
+                    LoginScreen(_index, callback),
+                    const SignupScreen(),
                   ]),
                 ),
               ],

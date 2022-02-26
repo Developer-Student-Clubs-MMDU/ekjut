@@ -1,12 +1,19 @@
-import 'package:ekjut/pages/homepage.dart';
+// import 'package:ekjut/pages/homepage.dart';
 import 'package:ekjut/wigets/button.dart';
 import 'package:ekjut/wigets/circular_icon.dart';
 import 'package:ekjut/wigets/input.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  int _index;
+  Function(int) callback;
+
+  LoginScreen(this._index, this.callback, {Key? key}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -19,6 +26,35 @@ class _LoginScreenState extends State<LoginScreen> {
     final _width = MediaQuery.of(context).size.width;
     final _emailcontroller = TextEditingController();
     final _passwordcontroller = TextEditingController();
+
+    Future signIn() async {
+      print("Sign in function ${_emailcontroller.text.trim()} ");
+      // showDialog(
+      //     builder: (BuildContext context) {
+      //       return const Center(
+      //         child: CircularProgressIndicator(),
+      //       );
+      //     },
+      //     context: context,
+      //     barrierDismissible: false); //
+      try {
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+                email: _emailcontroller.text.trim(),
+                password: _passwordcontroller.text.trim())
+            .then((value) => {
+                  print("value"),
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const HomeScreen(),
+                  //   ),
+                  // ),
+                });
+      } on FirebaseAuthException catch (err) {
+        print(err);
+      }
+    }
 
     return Container(
       width: _width,
@@ -54,8 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
             width: _width * 0.5,
             label: "Login",
             onPress: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+              signIn();
             },
           ),
           SizedBox(height: _height * 0.06),
@@ -101,6 +136,10 @@ class _LoginScreenState extends State<LoginScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
+              onTap: () {
+                print("index change");
+                widget.callback(1);
+              },
               child: RichText(
                 text: const TextSpan(
                   style: TextStyle(color: Colors.black, fontSize: 15),
