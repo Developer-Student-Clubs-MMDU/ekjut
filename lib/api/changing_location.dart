@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, avoid_print
 
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -15,9 +15,9 @@ class ChangeLocation extends ChangeNotifier {
   latLng.LatLng destinationPosition = latLng.LatLng(28.6697905, 77.3439278);
   latLng.LatLng helpPosition = latLng.LatLng(28.6697905, 77.3439278);
 
-  afterAddHelp(){
+  afterAddHelp() {
     helpPos = '';
-    helpPosition = latLng.LatLng(28.6697905, 77.3439278);;
+    helpPosition = latLng.LatLng(28.6697905, 77.3439278);
   }
 
   getUserLocation(latLng.LatLng pos) {

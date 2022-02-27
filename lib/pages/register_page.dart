@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       setState(() {
         _index = index;
         _controller.index = _index;
-        print("///////////////${_index}");
+        print("///////////////$_index");
       });
     }
     // _controller.addListener(() {

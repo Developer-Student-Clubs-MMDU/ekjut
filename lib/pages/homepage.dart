@@ -5,8 +5,6 @@
 import 'package:ekjut/api/changing_location.dart';
 import 'package:ekjut/api/helps.dart';
 import 'package:ekjut/models/services.dart';
-import 'package:ekjut/models/services.dart';
-import 'package:ekjut/models/services.dart';
 import 'package:ekjut/pages/home_pages.dart';
 import 'package:ekjut/pages/map.dart';
 import 'package:ekjut/pages/register_page.dart';

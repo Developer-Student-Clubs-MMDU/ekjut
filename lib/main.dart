@@ -1,4 +1,5 @@
 import 'package:ekjut/api/helps.dart';
+import 'package:ekjut/pages/verify_email_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:ekjut/api/changing_location.dart';
@@ -38,7 +39,9 @@ class MyApp extends StatelessWidget {
       home: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
-            return snapshot.hasData ? const HomeScreen() : const MyHomePage();
+            return snapshot.hasData
+                ? const VerifyEmailPage()
+                : const MyHomePage();
           }),
     );
   }

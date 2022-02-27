@@ -17,7 +17,7 @@ import 'package:here_sdk/routing.dart';
 class GetMyLocation extends StatefulWidget {
   final List<double> list;
 
-  GetMyLocation({required this.list});
+  const GetMyLocation({Key? key, required this.list}) : super(key: key);
 
   @override
   _GetMyLocationState createState() => _GetMyLocationState();

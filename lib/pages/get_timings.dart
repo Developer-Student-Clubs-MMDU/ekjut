@@ -1,4 +1,6 @@
 import 'package:ekjut/api/changing_location.dart';
+import 'package:ekjut/pages/register_page.dart';
+import 'package:ekjut/pages/signup_page.dart';
 import 'package:ekjut/wigets/button.dart';
 import 'package:ekjut/wigets/multi_choice.dart';
 import 'package:ekjut/wigets/red_button.dart';
@@ -232,13 +234,19 @@ class _GetMyTimingsState extends State<GetMyTimings> {
                   RedButton(
                     width: _width * 0.4,
                     label: "Cancel",
-                    onPress: () {},
+                    onPress: () {
+                      Navigator.pop(context);
+                    },
                   ),
                   ButtonWidget(
                     width: _width * 0.4,
                     label: "Save",
                     onPress: () {
-                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const SignupScreen()));
                     },
                   ),
                 ],
