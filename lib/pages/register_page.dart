@@ -2,14 +2,15 @@ import 'package:ekjut/pages/login_page.dart';
 import 'package:ekjut/pages/signup_page.dart';
 import 'package:flutter/material.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class RegistrationPage extends StatefulWidget {
+  const RegistrationPage({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<RegistrationPage> createState() => _RegistrationPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+class _RegistrationPageState extends State<RegistrationPage>
+    with TickerProviderStateMixin {
   final int _current = 0;
 
   // int _index = 0;

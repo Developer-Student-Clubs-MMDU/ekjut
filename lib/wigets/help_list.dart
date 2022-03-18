@@ -1,10 +1,12 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:ekjut/pages/map.dart';
 import 'package:flutter/material.dart';
 
 class HelpList extends StatefulWidget {
   final String service;
   final List<Map<String, dynamic>> serviceList;
-  HelpList({required this.service, required this.serviceList});
+  const HelpList({required this.service, required this.serviceList});
 
   @override
   State<HelpList> createState() => _HelpListState();
