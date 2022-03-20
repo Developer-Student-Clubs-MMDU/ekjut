@@ -32,24 +32,25 @@ class InputWidget extends StatelessWidget {
         controller: controller,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
-            contentPadding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
-            hintText: label,
-            hintStyle: TextStyle(
-                color: Colors.grey[400],
-                fontFamily: "Roboto",
-                fontWeight: FontWeight.w700,
-                fontSize: 12),
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(6.0),
-            ),
-            filled: true,
-            fillColor: const Color(0xFF1C173D),
-            prefixIcon: Icon(
-              icon,
-              size: 18,
+          contentPadding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
+          hintText: label,
+          hintStyle: TextStyle(
               color: Colors.grey[400],
-            )),
+              fontFamily: "Roboto",
+              fontWeight: FontWeight.w700,
+              fontSize: 12),
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(6.0),
+          ),
+          filled: true,
+          fillColor: const Color(0xFF1C173D),
+          prefixIcon: Icon(
+            icon,
+            size: 18,
+            color: Colors.grey[400],
+          ),
+        ),
       ),
     );
   }

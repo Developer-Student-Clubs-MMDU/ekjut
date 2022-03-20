@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ekjut/pages/map.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart' as latLng;
 
 class Helps {
   final String desc;
@@ -34,25 +36,40 @@ class Helps {
       services: json["services"]);
 }
 
-Widget buildHelp(Helps help) =>
+Widget buildHelp(Helps help
+// , BuildContext context
+        ) =>
 //  Text(help.uid);
-    Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ExpansionTile(
-        backgroundColor: Colors.green,
-        collapsedBackgroundColor: Colors.yellow,
-        title: Text(
-          help.uid,
-          style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
-        ),
-        subtitle: Text(help.uid),
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 18.0, bottom: 8.0),
-            child:
-                Align(alignment: Alignment.centerLeft, child: Text(help.desc)),
+    InkWell(
+      onTap: () {
+        //  Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //           builder: (context) => MapsPage(
+
+        //               personLocation: latLng.LatLng(help.location.latitude, help.location.longitude), index: index,
+        //                   ),
+        //         ),
+        //       );
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ExpansionTile(
+          backgroundColor: Colors.green,
+          collapsedBackgroundColor: Colors.yellow,
+          title: Text(
+            help.uid,
+            style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
           ),
-        ],
+          subtitle: Text(help.uid),
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 18.0, bottom: 8.0),
+              child: Align(
+                  alignment: Alignment.centerLeft, child: Text(help.desc)),
+            ),
+          ],
+        ),
       ),
     );
 
@@ -62,9 +79,9 @@ Widget buildHelp(Helps help) =>
 //       subtitle: Text(help.uid),
 //     );
 
-Stream<List<Helps>>? readHelps() => FirebaseFirestore.instance
+Stream<List<Helps>>? readHelps(showService) => FirebaseFirestore.instance
     .collection("helps")
-    .where("services", arrayContainsAny: ["Service 2"])
+    .where("services", arrayContainsAny: [showService])
     .snapshots()
     .map((snapshot) =>
         snapshot.docs.map((doc) => Helps.fromJson(doc.data())).toList());

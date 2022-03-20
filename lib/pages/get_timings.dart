@@ -1,4 +1,5 @@
 import 'package:ekjut/api/changing_location.dart';
+import 'package:ekjut/pages/make_profile_page.dart';
 import 'package:ekjut/pages/register_page.dart';
 import 'package:ekjut/pages/signup_page.dart';
 import 'package:ekjut/wigets/button.dart';
@@ -246,7 +247,7 @@ class _GetMyTimingsState extends State<GetMyTimings> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  const SignupScreen()));
+                                  const MakeProfile()));
                     },
                   ),
                 ],

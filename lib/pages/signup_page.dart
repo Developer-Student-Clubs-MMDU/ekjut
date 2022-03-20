@@ -19,9 +19,21 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  List<double> list = [];
+  late GeoPoint userloc;
+  Future getlocation() async {
+    UserLocation location = UserLocation();
+    list = await location.getUserLocation();
+    print("xxxxxxxxxxxxxxxxxxxx$list");
+    userloc = GeoPoint(list[0], list[1]);
+
+    return userloc;
+  }
+
   @override
   void initState() {
     super.initState();
+    getlocation();
   }
 
   @override
@@ -47,7 +59,11 @@ class _SignupScreenState extends State<SignupScreen> {
             FirebaseFirestore.instance
                 .collection("users")
                 .doc(userId)
-                .set({'uid': userId, 'company': "company", 'age': "age"})
+                .set({
+                  'uid': userId,
+                  'location': userloc,
+                  'email': _emailcontroller.text.trim()
+                })
                 .then((value) => print("User Added"))
                 .catchError((error) => print("Failed to add user: $error"));
           });

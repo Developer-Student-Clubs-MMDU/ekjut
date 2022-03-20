@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ekjut/api/user_details.dart';
 import 'package:ekjut/models/helps.dart';
 import 'package:ekjut/models/user.dart';
+import 'package:ekjut/pages/make_profile_page.dart';
 import 'package:ekjut/pages/read_users.dart';
 import 'package:ekjut/api/changing_location.dart';
 import 'package:ekjut/api/helps.dart';
@@ -64,6 +65,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  String showService = "Service 1";
+  GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     // Future<void> addUser() {
@@ -109,9 +113,114 @@ class _HomeScreenState extends State<HomeScreen> {
     //   return const Scaffold(
     //       body: Center(child: CircularProgressIndicator()));
     // }
-
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldState,
+        drawer: Drawer(
+          child: ListView(padding: EdgeInsets.zero, children: [
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: ListTile(
+                leading: CircleAvatar(
+                  radius: 30,
+                  backgroundColor: Colors.amber,
+                ),
+                title: Text(
+                  'Sundhar Pichai',
+                  style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 40,
+            ),
+            Container(
+              width: 70,
+              height: 1,
+              color: Colors.grey[300],
+            ),
+            const ListTile(
+              leading: Icon(Icons.home),
+              title: Text(
+                "Home",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+            ),
+            Container(
+              width: 70,
+              height: 1,
+              color: Colors.grey[300],
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MakeProfile()),
+                );
+              },
+              child: const ListTile(
+                leading: Icon(Icons.account_circle),
+                title: Text(
+                  "Profile",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+              ),
+            ),
+            Container(
+              width: 70,
+              height: 1,
+              color: Colors.grey[300],
+            ),
+            const ListTile(
+              leading: Icon(Icons.comment),
+              title: Text(
+                "About",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+            ),
+            Container(
+              width: 70,
+              height: 1,
+              color: Colors.grey[300],
+            ),
+            const ListTile(
+              leading: Icon(Icons.phone),
+              title: Text(
+                "Contact",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+            ),
+            Container(
+              width: 70,
+              height: 1,
+              color: Colors.grey[300],
+            ),
+            const SizedBox(
+              height: 100,
+            ),
+            InkWell(
+              onTap: () {
+                FirebaseAuth.instance.signOut();
+              },
+              child: const ListTile(
+                  leading: CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.grey,
+                child: Icon(
+                  Icons.logout,
+                  color: Colors.black,
+                ),
+              )),
+            ),
+          ]),
+        ),
         body: Container(
           width: _width,
           height: _height,
@@ -176,7 +285,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: GestureDetector(
                       onTap: () {
                         print("signout");
-                        FirebaseAuth.instance.signOut();
+                        _scaffoldState.currentState?.openDrawer();
+                        // FirebaseAuth.instance.signOut();
                       },
                       child: const Icon(
                         Icons.menu,
@@ -524,6 +634,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                               selectServices(
                                                   servicesItem[index]);
                                               setState(() {
+                                                print("before $showService");
+                                                showService =
+                                                    servicesItem[index];
+                                                print("after $showService");
+
                                                 isSwipeUp = true;
                                                 serviceItemSwipUp[index] = true;
                                               });
@@ -561,9 +676,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             // ),
 
                             StreamBuilder<List<Helps>>(
-                              stream: readHelps(),
+                              stream: readHelps(showService),
                               builder: (context, snapshot) {
+                                print("0000000000000 $showService");
                                 // print("00000000000000000000000000");
+
                                 print(snapshot);
                                 // print("00000000000000000000000000");
 
