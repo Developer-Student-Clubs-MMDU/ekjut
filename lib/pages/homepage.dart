@@ -142,12 +142,17 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 1,
               color: Colors.grey[300],
             ),
-            const ListTile(
-              leading: Icon(Icons.home),
-              title: Text(
-                "Home",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: const ListTile(
+                leading: Icon(Icons.home),
+                title: Text(
+                  "Home",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black),
+                ),
               ),
             ),
             Container(
@@ -284,7 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     alignment: Alignment.center,
                     child: GestureDetector(
                       onTap: () {
-                        print("signout");
+                        // print("signout");
                         _scaffoldState.currentState?.openDrawer();
                         // FirebaseAuth.instance.signOut();
                       },

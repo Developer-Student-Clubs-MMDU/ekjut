@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ekjut/wigets/multi_choice.dart';
+import 'package:ekjut/wigets/red_button.dart';
 import 'package:flutter/material.dart';
 import 'package:ekjut/api/changing_location.dart';
 import 'package:ekjut/pages/get_location.dart';
@@ -24,6 +25,8 @@ class _MakeProfileState extends State<MakeProfile> {
   // for entering location of user into list
   List<double> list = [];
   late Map<String, dynamic> fetchedUser = {};
+  List<dynamic> selectedServicesList = [];
+
   void fetchUserFromFirestore() async {
     var firebaseUser = FirebaseAuth.instance.currentUser;
     FirebaseFirestore.instance
@@ -34,6 +37,9 @@ class _MakeProfileState extends State<MakeProfile> {
       print("fetched ${value.data()}");
       setState(() {
         fetchedUser = value.data()!;
+        selectedServicesList = fetchedUser["services"];
+        print(
+            "selectedServicesList selectedServicesList ${selectedServicesList}");
       });
     });
   }
@@ -51,15 +57,7 @@ class _MakeProfileState extends State<MakeProfile> {
     getlocation();
   }
 
-  List<String> selectedServicesList = [
-    "Service 1",
-    "Service 2",
-    "Service 3",
-    "Service 4",
-    "Service 5",
-    "Service 6",
-    "Service 7"
-  ];
+  // selectedServicesList=fetchedUser["services"];
   static List<String> servicesList = [
     "Service 1",
     "Service 2",
@@ -69,6 +67,95 @@ class _MakeProfileState extends State<MakeProfile> {
     "Service 6",
     "Service 7"
   ];
+
+  _buildChoiceList() {
+    print("services ${fetchedUser["services"].runtimeType}");
+    List<Widget> servicesChoices = [];
+    for (var item in selectedServicesList) {
+      servicesChoices.add(Container(
+        margin: const EdgeInsets.all(2.0),
+        padding: const EdgeInsets.all(2.0),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(
+              color: Colors.white,
+            ),
+            borderRadius: const BorderRadius.all(Radius.circular(12))),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(item),
+        ),
+      ));
+    }
+    return servicesChoices;
+  }
+
+  void displayBottomCameraMenu(BuildContext context, servicesList) {
+    showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (builder) {
+          return SizedBox(
+            height: 280.0,
+            child: Container(
+                decoration: const BoxDecoration(
+                    color: Color(0xFF1C173D),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0))),
+                child: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Select services",
+                            style: TextStyle(
+                                color: Colors.grey[200],
+                                letterSpacing: 0.5,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                wordSpacing: 1.0),
+                          ),
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Icon(
+                                Icons.clear,
+                                color: Colors.grey[200],
+                              )),
+                        ],
+                      ),
+                      MultiSelectChip(
+                        servicesList,
+                        onSelectionChanged: (selectedList) {
+                          setState(() {
+                            selectedServicesList = selectedList;
+                            // print(selectedMonthList);
+                          });
+                        },
+                        maxSelection: 7,
+                      ),
+                      ButtonWidget(
+                        label: "Add",
+                        width: 150,
+                        onPress: () {
+                          setState(() {
+                            print("------------------ ${selectedServicesList}");
+                            Navigator.pop(context);
+                          });
+                        },
+                      )
+                    ],
+                  ),
+                )),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     final _emailcontroller = TextEditingController();
@@ -94,7 +181,19 @@ class _MakeProfileState extends State<MakeProfile> {
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
             children: [
-              const SizedBox(height: 100),
+              Padding(
+                padding: const EdgeInsets.only(top: 18.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    icon: const Icon(Icons.home, color: Color(0xFF1C173D)),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 50),
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6.0),
@@ -319,21 +418,37 @@ class _MakeProfileState extends State<MakeProfile> {
                       ),
               ),
               const SizedBox(height: 30),
-              MultiSelectChip(
-                servicesList,
-                onSelectionChanged: (selectedList) {
-                  setState(() {
-                    selectedServicesList = selectedList;
-                    // print(selectedMonthList);
-                  });
-                },
-                maxSelection: 7,
+              Row(
+                children: [
+                  Text(
+                    "Services you can provide",
+                    style: TextStyle(
+                        color: Colors.grey[400],
+                        fontFamily: "Roboto",
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        // displayBottomSheet(context);
+                        displayBottomCameraMenu(context, servicesList);
+                      },
+                      icon:
+                          const Icon(Icons.edit, size: 20, color: Colors.grey)),
+                ],
               ),
-              InputWidget(
-                icon: FontAwesomeIcons.handsHelping,
-                label: "Services",
-                controller: _servivecontroller,
-              ),
+              Wrap(children: _buildChoiceList()),
+              // MultiSelectChip(
+              //   servicesList,
+              //   onSelectionChanged: (selectedList) {
+              //     setState(() {
+              //       selectedServicesList = selectedList;
+              //       // print(selectedMonthList);
+              //     });
+              //   },
+              //   maxSelection: 7,
+              // ),
+
               const SizedBox(height: 40),
               ButtonWidget(
                 width: _width * 0.5,
@@ -342,7 +457,7 @@ class _MakeProfileState extends State<MakeProfile> {
                   // Future signUp() async {
                   // try {
                   print("Profile updated...");
-                  // print(context.watch<ChangeLocation>().destination);
+                  print(context.read<ChangeLocation>().destination);
                   // print(context.watch<ChangeLocation>().foundLocation);
                   // print(context.watch<ChangeLocation>().sourceLocation);
                   // fetchUserFromFirestore();
@@ -354,7 +469,8 @@ class _MakeProfileState extends State<MakeProfile> {
                       .doc(firebaseUser?.uid)
                       .update({
                     "name": _namedcontroller.text,
-                    "services": selectedServicesList
+                    "services": selectedServicesList,
+                    "destination": context.read<ChangeLocation>().destination,
                   }).then((_) {
                     print("name ${_namedcontroller.text.trim()}");
 
