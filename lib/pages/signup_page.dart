@@ -19,6 +19,8 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  late Map<String, dynamic> fetchedUser = {};
+
   List<double> list = [];
   late GeoPoint userloc;
   Future getlocation() async {

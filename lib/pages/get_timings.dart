@@ -244,10 +244,13 @@ class _GetMyTimingsState extends State<GetMyTimings> {
                     label: "Save",
                     onPress: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const MakeProfile()));
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const MakeProfile(),
+                        ),
+                      );
+                      // Navigator.pop(context);
                     },
                   ),
                 ],

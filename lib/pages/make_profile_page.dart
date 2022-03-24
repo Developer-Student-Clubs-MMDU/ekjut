@@ -24,8 +24,8 @@ class MakeProfile extends StatefulWidget {
 class _MakeProfileState extends State<MakeProfile> {
   // for entering location of user into list
   List<double> list = [];
-  late Map<String, dynamic> fetchedUser = {};
   List<dynamic> selectedServicesList = [];
+  late Map<String, dynamic> fetchedUser = {};
 
   void fetchUserFromFirestore() async {
     var firebaseUser = FirebaseAuth.instance.currentUser;
@@ -458,11 +458,25 @@ class _MakeProfileState extends State<MakeProfile> {
                   // try {
                   print("Profile updated...");
                   print(context.read<ChangeLocation>().destination);
-                  // print(context.watch<ChangeLocation>().foundLocation);
-                  // print(context.watch<ChangeLocation>().sourceLocation);
+                  try {
+                    // print(context.watch<ChangeLocation>().foundLocation);
+                    print(
+                        "source: ${context.read<ChangeLocation>().destinationPosition}");
+                    // print(context.watch<ChangeLocation>().foundSource);
+                  } catch (e) {
+                    print(e.toString());
+                  } // print(context.watch<ChangeLocation>().sourceLocation);
                   // fetchUserFromFirestore();
                   // print(" uidis  ${fetchedUser["uid"]}");
-
+                  GeoPoint destinationPos = GeoPoint(
+                      context
+                          .read<ChangeLocation>()
+                          .destinationPosition
+                          .latitude,
+                      context
+                          .read<ChangeLocation>()
+                          .destinationPosition
+                          .longitude);
                   var firebaseUser = FirebaseAuth.instance.currentUser;
                   FirebaseFirestore.instance
                       .collection("users")
@@ -470,11 +484,11 @@ class _MakeProfileState extends State<MakeProfile> {
                       .update({
                     "name": _namedcontroller.text,
                     "services": selectedServicesList,
-                    "destination": context.read<ChangeLocation>().destination,
+                    "destination": destinationPos,
                   }).then((_) {
                     print("name ${_namedcontroller.text.trim()}");
 
-                    print("success updated Profile!");
+                    print("Success updated Profile!");
                     Fluttertoast.showToast(
                         msg: "Profile Updated Succesfully!",
                         toastLength: Toast.LENGTH_SHORT,

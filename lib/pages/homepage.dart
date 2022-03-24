@@ -1,4 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ekjut/models/pointers_position.dart';
+import 'package:ekjut/wigets/userlocation.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:dart_geohash/dart_geohash.dart';
+import 'package:georange/georange.dart';
 import 'package:ekjut/api/user_details.dart';
 import 'package:ekjut/models/helps.dart';
 import 'package:ekjut/models/user.dart';
@@ -63,11 +68,51 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    getlocation();
+  }
+
+  // Future fetchFiveHelps() {
+  //   StreamBuilder(
+  //     //Error number 2
+  //     // stream: readHelps(showService, range, 5),
+  //     stream: FirebaseFirestore.instance
+  //         .collection("helps")
+  //         .where("services", arrayContainsAny: [showService])
+  //         .where("locHash", isGreaterThanOrEqualTo: range.lower)
+  //         .where("locHash", isLessThanOrEqualTo: range.upper)
+  //         .limit(10)
+  //         .snapshots(),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return CircularProgressIndicator();
+  //       } else if (snapshot.connectionState == ConnectionState.done) {
+  //         return Text('done');
+  //       } else if (snapshot.hasError) {
+  //         return Text('Error!');
+  //       } else {
+  //         fivePointers.add(snapshot.data);
+  //         print(fivePointers);
+  //       }
+  //       return fivePointers;
+  //     }
+  //   );
+  // }
+
+  List<double> list = [];
+  Future getlocation() async {
+    UserLocation location = UserLocation();
+    list = await location.getUserLocation();
+    print("xxxxxxxxxxxxxxxxxxxx$list");
+
+    return list;
   }
 
   String showService = "Service 1";
-  GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
-
+  final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
+  // late Range range = georange.geohashRange(list[0], list[1], distance: 10);
+  late Range range =
+      georange.geohashRange(28.6697905, 77.3439278, distance: 10);
+  List<dynamic> fivePointers = [];
   @override
   Widget build(BuildContext context) {
     // Future<void> addUser() {
@@ -317,6 +362,57 @@ class _HomeScreenState extends State<HomeScreen> {
                 BuildCircle(opacity: 0.5, radius: _width * 0.80),
                 //4
                 BuildCircle(opacity: 0.3, radius: _width * 1.5),
+                StreamBuilder(
+                  // stream: readHelps(showService, range, 5),
+                  stream: FirebaseFirestore.instance
+                      .collection("helps")
+                      // .where("services", arrayContainsAny: [showService])
+                      // .where("locHash", isGreaterThanOrEqualTo: range.lower)
+                      // .where("locHash", isLessThanOrEqualTo: range.upper)
+                      .limit(5)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.done) {
+                      return Text('done');
+                    } else if (snapshot.hasError) {
+                      return Text('Error!');
+                    } else {
+                      fivePointers.add(snapshot.data);
+                      print(
+                          fivePointers); //print every second: [0] then [0,1] then [0,1,2] ...
+                      return ListView.builder(
+                        itemBuilder: (context, index) {
+                          return Positioned(
+                            top: pointerPos[index][0],
+                            left: pointerPos[index][1],
+                            child: IconButton(
+                              color: Colors.purple,
+                              icon: const Icon(
+                                Icons.person_pin,
+                                size: 40,
+                              ),
+                              onPressed: () {
+                                //  Navigator.push(
+                                //         context,
+                                //         MaterialPageRoute(
+                                //           builder: (context) => MapsPage(
+
+                                //               personLocation: latLng.LatLng(help.location.latitude, help.location.longitude), index: index,
+                                //                   ),
+                                //         ),
+                                //       );
+                              },
+                            ),
+                          );
+                        },
+                        itemCount: fivePointers.length,
+                      );
+                    }
+                  },
+                ),
 
                 const Positioned(
                   top: 200,
@@ -681,7 +777,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             // ),
 
                             StreamBuilder<List<Helps>>(
-                              stream: readHelps(showService),
+                              stream: readHelps(showService, range, 10),
                               builder: (context, snapshot) {
                                 print("0000000000000 $showService");
                                 // print("00000000000000000000000000");
@@ -696,12 +792,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                 } else if (snapshot.hasData) {
                                   print("has data");
                                   final helps = snapshot.data!;
-                                  print(helps);
+                                  print("currently data fetching is $helps");
                                   return Container(
                                     height: 500 - 232 - 92,
                                     child: ListView(
-                                        children:
-                                            helps.map(buildHelp).toList()),
+                                      children:
+                                          // helps.map(buildHelp).toList(),
+                                          helps
+                                              .map((value) =>
+                                                  buildHelp(value, context))
+                                              .toList(),
+                                    ),
                                   );
                                 } else {
                                   return const Center(
@@ -736,20 +837,30 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void createHelp() {
+    // final geo = Geoflutterfire();
+    GeoRange georange = GeoRange();
+
     final user = FirebaseAuth.instance.currentUser;
     latLng.LatLng loc = context.read<ChangeLocation>().helpPosition;
+    // GeoFirePoint location =
+    // geo.point(latitude: loc.latitude, longitude: loc.longitude);
+    String locHash = georange.encode(loc.longitude, loc.latitude);
     final GeoPoint location = GeoPoint(loc.latitude, loc.longitude);
     if (user != null) {
+      String x = "UjKDobw91yhWrAETaEfpv3Ngu6r1";
       // print(descriptionController.text);
       print("enetr the body of create help");
       FirebaseFirestore.instance
           .collection("helps")
-          .doc(user.uid)
+          // .doc(user.uid)
+          .doc(x)
           .set({
-            'uid': user.uid,
+            // 'uid': user.uid,
+            "uid": x,
             "desc": "descriptionController.text.trim()",
             'inProgress': false,
             'location': location,
+            "locHash": locHash,
             "services": selectedServicesList,
             "time": DateTime.now(),
           })
