@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ekjut/pages/homepage.dart';
+import 'package:ekjut/wigets/button.dart';
 import 'package:ekjut/wigets/ripple_animation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -65,14 +66,17 @@ class _WatingHelpState extends State<WatingHelp> {
                         WavyAnimatedText("Searching for Help..."),
                       ],
                       isRepeatingAnimation: true,
-                    ),                  ),
+                    ),
+                  ),
                   const SizedBox(height: 100.0),
-                  ElevatedButton(
-                    onPressed: () {
+                  ButtonWidget(
+                    onPress: () {
                       final user = FirebaseAuth.instance.currentUser;
-                      print('================================================= $user');
+                      print(
+                          '================================================= $user');
                       print(user?.uid);
-                      print('======================================================');
+                      print(
+                          '======================================================');
                       FirebaseFirestore.instance
                           .collection('helps')
                           .doc(user?.uid)
@@ -82,7 +86,8 @@ class _WatingHelpState extends State<WatingHelp> {
                           MaterialPageRoute(
                               builder: (context) => HomeScreen()));
                     },
-                    child: const Text("Cancel Help"),
+                    label: "Cancel Help",
+                    width: MediaQuery.of(context).size.width / 2,
                   ),
                 ],
               ),

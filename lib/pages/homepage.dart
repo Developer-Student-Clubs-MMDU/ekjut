@@ -1,5 +1,4 @@
-import 'dart:ffi';
-
+import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ekjut/models/pointers_position.dart';
 import 'package:ekjut/pages/map.dart';
@@ -50,6 +49,42 @@ class _HomeScreenState extends State<HomeScreen> {
 
   selectServices(String service) {
     serviceList = Provider.of<Help>(context, listen: false).getService(service);
+  }
+
+  createPointers(data, pointerPos) {
+    for (int i = 0; i < data.length; i++) {
+      Positioned(
+        top: pointerPos[i][0],
+        left: pointerPos[i][1],
+        child: IconButton(
+          color: Colors.purple,
+          icon: const Icon(
+            Icons.person_pin,
+            size: 40,
+          ),
+          onPressed: () {
+            // var help = Helps(
+            //   desc: snapshot.data?.docs[index]["desc"],
+            //   inProgress: false,
+            //   locHash: snapshot.data?.docs[index]
+            //       ["locHash"],
+            //   location: snapshot.data?.docs[index]
+            //       ["location"],
+            //   uid: snapshot.data?.docs[index]["uid"],
+            //   services: snapshot.data?.docs[index]
+            //       ["services"],
+            //   time: snapshot.data?.docs[index]["time"],
+            // );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => MapsPage(help: help),
+            //   ),
+            // );
+          },
+        ),
+      );
+    }
   }
 
   void addHelpToList() {
@@ -169,116 +204,171 @@ class _HomeScreenState extends State<HomeScreen> {
     // }
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         key: _scaffoldState,
-        drawer: Drawer(
-          child: ListView(padding: EdgeInsets.zero, children: [
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: ListTile(
-                leading: CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.amber,
-                ),
-                title: Text(
-                  '${user?.email.toString()}',
-                  style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24),
-                ),
+        drawer: Container(
+          width: 250,
+          child: Drawer(
+            backgroundColor: Colors.transparent,
+            child: ClipPath(
+              child: Stack(
+                children: [
+                  Container(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 26.0, sigmaY: 26.0),
+                      child: Container(
+                        decoration:
+                            BoxDecoration(color: Colors.white.withOpacity(0.1)),
+                      ),
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Flexible(
+                        child: ListView(padding: EdgeInsets.zero, children: [
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: CircleAvatar(radius: 30)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "${FirebaseAuth.instance.currentUser!.email}",
+                              overflow: TextOverflow.fade,
+                              maxLines: 1,
+                              softWrap: false,
+                              style: TextStyle(
+                                // fontWeight: FontWeight.thin,
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Container(
+                            // width: 70,
+                            height: 0.1,
+                            color: Colors.grey[300],
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: ListTile(
+                              leading:
+                                  Icon(Icons.home, color: Colors.grey[500]),
+                              title: Text(
+                                "Home",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[500],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 70,
+                            height: 0.1,
+                            color: Colors.grey[300],
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const MakeProfile()),
+                              );
+                            },
+                            child: ListTile(
+                              leading: Icon(
+                                Icons.account_circle,
+                                color: Colors.grey[500],
+                              ),
+                              title: Text(
+                                "Profile",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[500]),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 70,
+                            height: 0.1,
+                            color: Colors.grey[300],
+                          ),
+                          ListTile(
+                            leading: Icon(
+                              Icons.comment,
+                              color: Colors.grey[500],
+                            ),
+                            title: Text(
+                              "About",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[500]),
+                            ),
+                          ),
+                          Container(
+                            width: 70,
+                            height: 0.1,
+                            color: Colors.grey[300],
+                          ),
+                          ListTile(
+                            leading: Icon(
+                              Icons.phone,
+                              color: Colors.grey[500],
+                            ),
+                            title: Text(
+                              "Contact",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[500]),
+                            ),
+                          ),
+                          Container(
+                            width: 70,
+                            height: 0.1,
+                            color: Colors.grey[300],
+                          ),
+                          const SizedBox(
+                            height: 100,
+                          ),
+                        ]),
+                      ),
+                      Container(
+                        // width: 70,
+                        height: 0.2,
+                        color: Colors.grey[300],
+                      ),
+                      InkWell(
+                        onTap: () {
+                          FirebaseAuth.instance.signOut();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListTile(
+                              title: Text(
+                                "Logout",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[500]),
+                              ),
+                              leading: Icon(
+                                Icons.logout,
+                                color: Colors.grey[500],
+                              )),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            const SizedBox(
-              height: 40,
-            ),
-            Container(
-              width: 70,
-              height: 1,
-              color: Colors.grey[300],
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: const ListTile(
-                leading: Icon(Icons.home),
-                title: Text(
-                  "Home",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black),
-                ),
-              ),
-            ),
-            Container(
-              width: 70,
-              height: 1,
-              color: Colors.grey[300],
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MakeProfile()),
-                );
-              },
-              child: const ListTile(
-                leading: Icon(Icons.account_circle),
-                title: Text(
-                  "Profile",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black),
-                ),
-              ),
-            ),
-            Container(
-              width: 70,
-              height: 1,
-              color: Colors.grey[300],
-            ),
-            const ListTile(
-              leading: Icon(Icons.comment),
-              title: Text(
-                "About",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-              ),
-            ),
-            Container(
-              width: 70,
-              height: 1,
-              color: Colors.grey[300],
-            ),
-            const ListTile(
-              leading: Icon(Icons.phone),
-              title: Text(
-                "Contact",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-              ),
-            ),
-            Container(
-              width: 70,
-              height: 1,
-              color: Colors.grey[300],
-            ),
-            const SizedBox(
-              height: 100,
-            ),
-            InkWell(
-              onTap: () {
-                FirebaseAuth.instance.signOut();
-              },
-              child: const ListTile(
-                  leading: CircleAvatar(
-                radius: 30,
-                backgroundColor: Colors.grey,
-                child: Icon(
-                  Icons.logout,
-                  color: Colors.black,
-                ),
-              )),
-            ),
-          ]),
+          ),
         ),
         body: Container(
           width: _width,
@@ -401,87 +491,163 @@ class _HomeScreenState extends State<HomeScreen> {
                 //               }).toList(),
                 //       );
                 //     }),
-                StreamBuilder<QuerySnapshot>(
-                  // stream: readHelps(showService, range, 5),
-                  stream: FirebaseFirestore.instance
-                      .collection("helps")
-                      // .where("services", arrayContainsAny: [showService])
-                      // .where("locHash", isGreaterThanOrEqualTo: range.lower)
-                      // .where("locHash", isLessThanOrEqualTo: range.upper)
-                      .limit(5)
-                      .snapshots(),
-                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    //  var docs = snapshot.data?.doc.map(doc => doc.data());
-                    //  print(docs);
-                    // print(
-                    //     '=================================================================');
-                    // print(snapshot.data);
-                    // print(
-                    //     '=================================================================');
-                    // if (snapshot.connectionState == ConnectionState.waiting) {
-                    //   return CircularProgressIndicator();
-                    // } else if (snapshot.connectionState ==
-                    //     ConnectionState.done) {
-                    //   return Text('done');
-                    // } else
-                    if (snapshot.hasError) {
-                      return Text('Error!');
-                    } else if (!snapshot.hasData) {
-                      return Container();
-                    }
-                    // if(fivePointers.length == tempPointers.length){
-                    //   fivePointers = tempPointers;
-                    // }
-                    // else
-                    // tempPointers.add(snapshot.data);
-                    // fivePointers = tempPointers;
-                    // tempPointers = [];
-                    //print every second: [0] then [0,1] then [0,1,2] ...
-                    GeoRange georange = GeoRange();
-                    return ListView.builder(
-                      itemBuilder: (context, index) {
-                        // print(snapshot.data?.docs);
-                        // print('***************************************************');
-                        // print(pointerPos[index][0]);
-                        // print(pointerPos[index][1]);
-                        // print('***************************************************');
-                        return Positioned(
-                          top: pointerPos[index][0],
-                          left: pointerPos[index][1],
-                          child: IconButton(
-                            color: Colors.purple,
-                            icon: const Icon(
-                              Icons.person_pin,
-                              size: 40,
-                            ),
-                            onPressed: () {
-                              var help = Helps(
-                                desc: snapshot.data?.docs[index]["desc"],
-                                inProgress: false,
-                                locHash: snapshot.data?.docs[index]["locHash"],
-                                location: snapshot.data?.docs[index]
-                                    ["location"],
-                                uid: snapshot.data?.docs[index]["uid"],
-                                services: snapshot.data?.docs[index]
-                                    ["services"],
-                                time: snapshot.data?.docs[index]["time"],
-                              );
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MapsPage(help: help),
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                      itemCount: snapshot.data?.docs.length,
-                    );
 
-                    // fivePointeRrs.clear();
-                  },
-                ),
+                for (int i = 0; i < 5; i++)
+                  Positioned(
+                      left: pointerPos[i][0],
+                      right: pointerPos[i][1],
+                      child: Text("i"))
+                // // StreamBuilder<QuerySnapshot>(
+                //   // stream: readHelps(showService, range, 5),
+                //   stream: FirebaseFirestore.instance
+                //       .collection("helps")
+                //       // .where("services", arrayContainsAny: [showService])
+                //       // .where("locHash", isGreaterThanOrEqualTo: range.lower)
+                //       // .where("locHash", isLessThanOrEqualTo: range.upper)
+                //       .limit(5)
+                //       .snapshots(),
+                //   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                //     //  var docs = snapshot.data?.doc.map(doc => doc.data());
+                //     //  print(docs);
+                //     // print(
+                //     //     '=================================================================');
+                //     // print(snapshot.data);
+                //     // print(
+                //     //     '=================================================================');
+                //     // if (snapshot.connectionState == ConnectionState.waiting) {
+                //     //   return CircularProgressIndicator();
+                //     // } else if (snapshot.connectionState ==
+                //     //     ConnectionState.done) {
+                //     //   return Text('done');
+                //     // } else
+                //     if (snapshot.hasError) {
+                //       return Text('Error!');
+                //     } else if (!snapshot.hasData) {
+                //       return Container();
+                //     }
+                //     var data = snapshot.data?.docs;
+                //     final int dataLength = data!.length;
+                //     // for (var _widget in snapshot.data!.docs) {
+                //     for (int i = 0; i < 5; i++) {
+                //       Positioned(
+                //         top: pointerPos[i][0],
+                //         left: pointerPos[i][1],
+                //         child: IconButton(
+                //           color: Colors.purple,
+                //           icon: const Icon(
+                //             Icons.person_pin,
+                //             size: 40,
+                //           ),
+                //           onPressed: () {
+                //             // var help = Helps(
+                //             //   desc: snapshot.data?.docs[index]["desc"],
+                //             //   inProgress: false,
+                //             //   locHash: snapshot.data?.docs[index]
+                //             //       ["locHash"],
+                //             //   location: snapshot.data?.docs[index]
+                //             //       ["location"],
+                //             //   uid: snapshot.data?.docs[index]["uid"],
+                //             //   services: snapshot.data?.docs[index]
+                //             //       ["services"],
+                //             //   time: snapshot.data?.docs[index]["time"],
+                //             // );
+                //             // Navigator.push(
+                //             //   context,
+                //             //   MaterialPageRoute(
+                //             //     builder: (context) => MapsPage(help: help),
+                //             //   ),
+                //             // );
+                //           },
+                //         ),
+                //       );
+                //     }
+                //     // if(fivePointers.length == tempPointers.length){
+                //     //   fivePointers = tempPointers;
+                //     // }
+                //     // else
+                //     // tempPointers.add(snapshot.data);
+                //     // fivePointers = tempPointers;
+                //     // tempPointers = [];
+                //     //print every second: [0] then [0,1] then [0,1,2] ...
+                //     GeoRange georange = GeoRange();
+                //     return (for(int i = 0; i < 5; i++) {
+                //       Positioned(
+                //         top: pointerPos[i][0],
+                //         left: pointerPos[i][1],
+                //         child: IconButton(
+                //           color: Colors.purple,
+                //           icon: const Icon(
+                //             Icons.person_pin,
+                //             size: 40,
+                //           ),
+                //           onPressed: () {
+                //             // var help = Helps(
+                //             //   desc: snapshot.data?.docs[index]["desc"],
+                //             //   inProgress: false,
+                //             //   locHash: snapshot.data?.docs[index]
+                //             //       ["locHash"],
+                //             //   location: snapshot.data?.docs[index]
+                //             //       ["location"],
+                //             //   uid: snapshot.data?.docs[index]["uid"],
+                //             //   services: snapshot.data?.docs[index]
+                //             //       ["services"],
+                //             //   time: snapshot.data?.docs[index]["time"],
+                //             // );
+                //             // Navigator.push(
+                //             //   context,
+                //             //   MaterialPageRoute(
+                //             //     builder: (context) => MapsPage(help: help),
+                //             //   ),
+                //             // );
+                //           },
+                //         ),
+                //       );
+                //     });
+                //     // return ListView.builder(
+                //     //   itemBuilder: (context, index) {
+                //     //     // print(snapshot.data?.docs);
+                //     //     // print('***************************************************');
+                //     //     // print(pointerPos[index][0]);
+                //     //     // print(pointerPos[index][1]);
+                //     //     // print('***************************************************');
+
+                //     //     return Positioned(
+                //     //       top: pointerPos[index][0],
+                //     //       left: pointerPos[index][1],
+                //     //       child: IconButton(
+                //     //         color: Colors.purple,
+                //     //         icon: const Icon(
+                //     //           Icons.person_pin,
+                //     //           size: 40,
+                //     //         ),
+                //     //         onPressed: () {
+                //     //           var help = Helps(
+                //     //             desc: snapshot.data?.docs[index]["desc"],
+                //     //             inProgress: false,
+                //     //             locHash: snapshot.data?.docs[index]["locHash"],
+                //     //             location: snapshot.data?.docs[index]
+                //     //                 ["location"],
+                //     //             uid: snapshot.data?.docs[index]["uid"],
+                //     //             services: snapshot.data?.docs[index]
+                //     //                 ["services"],
+                //     //             time: snapshot.data?.docs[index]["time"],
+                //     //           );
+                //     //           Navigator.push(
+                //     //             context,
+                //     //             MaterialPageRoute(
+                //     //               builder: (context) => MapsPage(help: help),
+                //     //             ),
+                //     //           );
+                //     //         },
+                //     //       ),
+                //     //     );
+                //     //   },
+                //     //   itemCount: snapshot.data?.docs.length,
+                //     // );
+
+                //     // fivePointeRrs.clear();
+                //   },
+                // ),
 
                 // const Positioned(
                 //   top: 200,
@@ -508,6 +674,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 //   left: 200,
                 //   child: BuildPeople(id: "QWDUI", index: 4),
                 // ),
+                ,
                 AnimatedPositioned(
                   curve: Curves.decelerate,
                   top: _height * 0.1,
@@ -563,145 +730,292 @@ class _HomeScreenState extends State<HomeScreen> {
                                 bottomRight: Radius.circular(6),
                               ),
                             ),
-                            child: SingleChildScrollView(
-                              child: SizedBox(
-                                width: _width * 0.80,
-                                height: _height * 0.60,
-                                child: Column(
-                                  // mainAxisAlignment: MainAxisAlignment.start,
+                            // child: SingleChildScrollView(
+                            //   child: SizedBox(
+                            //     width: _width * 0.80,
+                            //     height: _height * 0.60,
+                            //     child: Column(
+                            //       // mainAxisAlignment: MainAxisAlignment.start,
+                            //       children: [
+                            //         Row(
+                            //           mainAxisAlignment:
+                            //               MainAxisAlignment.spaceBetween,
+                            //           crossAxisAlignment:
+                            //               CrossAxisAlignment.start,
+                            //           children: [
+                            //             const Text(
+                            //               "Help",
+                            //               style: TextStyle(
+                            //                   color: Colors.white,
+                            //                   // fontFamily: "Roboto",
+                            //                   fontWeight: FontWeight.w700,
+                            //                   fontSize: 15),
+                            //             ),
+                            //             InkWell(
+                            //               onTap: () {
+                            //                 setState(() {
+                            //                   isSwipeRight = false;
+                            //                 });
+                            //               },
+                            //               child: const Icon(
+                            //                 Icons.close,
+                            //                 size: 24,
+                            //                 color: Colors.white,
+                            //               ),
+                            //             )
+                            //           ],
+                            //         ),
+                            //         // InputWidget(
+                            //         //   icon: FontAwesomeIcons.map,
+                            //         //   label: 'Location',
+                            //         //   controller: _userLocation,
+                            //         // ),
+                            //         const SearchViewInput(),
+                            //         const SizedBox(
+                            //           height: 20.0,
+                            //         ),
+                            //         const Padding(
+                            //           padding: EdgeInsets.all(8.0),
+                            //           child: Align(
+                            //             alignment: Alignment.centerLeft,
+                            //             child: Text(
+                            //               "Services:",
+                            //               style: TextStyle(
+                            //                   color: Colors.white,
+                            //                   // fontFamily: "Roboto",
+                            //                   fontWeight: FontWeight.w700,
+                            //                   fontSize: 15),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //         Expanded(
+                            //           child: ListView(
+                            //             scrollDirection: Axis.horizontal,
+                            //             shrinkWrap: false,
+                            //             children: [
+                            //               MultiSelectChip(
+                            //                 servicesItem,
+                            //                 onSelectionChanged: (selectedList) {
+                            //                   setState(() {
+                            //                     selectedServicesList =
+                            //                         selectedList;
+                            //                     // print(selectedMonthList);
+                            //                   });
+                            //                 },
+                            //                 maxSelection: 1,
+                            //               ),
+                            //             ],
+                            //           ),
+                            //         ),
+                            //         const Padding(
+                            //           padding: EdgeInsets.all(8.0),
+                            //           child: Align(
+                            //             alignment: Alignment.centerLeft,
+                            //             child: Text(
+                            //               "Description:",
+                            //               style: TextStyle(
+                            //                   color: Colors.white,
+                            //                   // fontFamily: "Roboto",
+                            //                   fontWeight: FontWeight.w700,
+                            //                   fontSize: 15),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //         SingleChildScrollView(
+                            //           child: TextField(
+                            //             controller: descriptionController,
+                            //             style: const TextStyle(
+                            //                 color: Color(0xFFbdc6cf)),
+                            //             decoration: const InputDecoration(
+                            //               filled: true,
+                            //               fillColor: Color(0xFF36306D),
+                            //               border: OutlineInputBorder(),
+                            //               hintText:
+                            //                   'Enter a description of the help(optional)',
+                            //             ),
+                            //             keyboardType: TextInputType.multiline,
+                            //             // maxLines: 4,
+                            //           ),
+                            //         ),
+                            //         Padding(
+                            //           padding: const EdgeInsets.all(8.0),
+                            //           child: Row(
+                            //             mainAxisAlignment:
+                            //                 MainAxisAlignment.spaceBetween,
+                            //             children: [
+                            //               RedButton(
+                            //                 width: _width * 0.3,
+                            //                 label: "Cancel",
+                            //                 onPress: () {
+                            //                   isSwipeRight = false;
+                            //                 },
+                            //               ),
+                            //               ButtonWidget(
+                            //                 width: _width * 0.3,
+                            //                 label: "Help",
+                            //                 onPress: () {
+                            //                   isSwipeRight = false;
+                            //                   // addHelpToList();
+                            //                   setState(() {
+                            //                     print(descriptionController.text
+                            //                         .trim());
+                            //                     createHelp();
+                            //                   });
+                            //                 },
+                            //               ),
+                            //             ],
+                            //           ),
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
+
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          "Help",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              // fontFamily: "Roboto",
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 15),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              isSwipeRight = false;
-                                            });
-                                          },
-                                          child: const Icon(
-                                            Icons.close,
-                                            size: 24,
-                                            color: Colors.white,
-                                          ),
-                                        )
-                                      ],
+                                    const Text(
+                                      "Help",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          // fontFamily: "Roboto",
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 15),
                                     ),
-                                    // InputWidget(
-                                    //   icon: FontAwesomeIcons.map,
-                                    //   label: 'Location',
-                                    //   controller: _userLocation,
-                                    // ),
-                                    const SearchViewInput(),
-                                    const SizedBox(
-                                      height: 20.0,
-                                    ),
-                                    const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Services:",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              // fontFamily: "Roboto",
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 15),
-                                        ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          isSwipeRight = false;
+                                        });
+                                      },
+                                      child: const Icon(
+                                        Icons.close,
+                                        size: 24,
+                                        color: Colors.white,
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: ListView(
-                                        scrollDirection: Axis.horizontal,
-                                        shrinkWrap: false,
-                                        children: [
-                                          MultiSelectChip(
-                                            servicesItem,
-                                            onSelectionChanged: (selectedList) {
-                                              setState(() {
-                                                selectedServicesList =
-                                                    selectedList;
-                                                // print(selectedMonthList);
-                                              });
-                                            },
-                                            maxSelection: 1,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Description:",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              // fontFamily: "Roboto",
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 15),
-                                        ),
-                                      ),
-                                    ),
-                                    SingleChildScrollView(
-                                      child: TextField(
-                                        controller: descriptionController,
-                                        style: const TextStyle(
-                                            color: Color(0xFFbdc6cf)),
-                                        decoration: const InputDecoration(
-                                          filled: true,
-                                          fillColor: Color(0xFF36306D),
-                                          border: OutlineInputBorder(),
-                                          hintText:
-                                              'Enter a description of the help(optional)',
-                                        ),
-                                        keyboardType: TextInputType.multiline,
-                                        // maxLines: 4,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          RedButton(
-                                            width: _width * 0.3,
-                                            label: "Cancel",
-                                            onPress: () {
-                                              isSwipeRight = false;
-                                            },
-                                          ),
-                                          ButtonWidget(
-                                            width: _width * 0.3,
-                                            label: "Help",
-                                            onPress: () {
-                                              isSwipeRight = false;
-                                              // addHelpToList();
-                                              setState(() {
-                                                print(descriptionController.text
-                                                    .trim());
-                                                createHelp();
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                    )
                                   ],
                                 ),
-                              ),
+                                // PhysicalModel(
+                                //   color: Color(0xFF1C173D),
+                                //   borderRadius: BorderRadius.circular(12.0),
+                                //   elevation: 3.5,
+                                //   child: TextField(
+                                //       controller: _userLocation,
+                                //       decoration: InputDecoration(
+                                //           label: Text("Location"))),
+                                // ),
+                                // InputWidget(
+                                //   icon: FontAwesomeIcons.map,
+                                //   label: 'Location',
+                                //   controller: _userLocation,
+                                // ),
+
+                                const SearchViewInput(),
+                                const SizedBox(
+                                  height: 20.0,
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "Services:",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          // fontFamily: "Roboto",
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 15),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height: 50,
+                                  child: Expanded(
+                                    child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: [
+                                        MultiSelectChip(
+                                          servicesItem,
+                                          onSelectionChanged: (selectedList) {
+                                            setState(() {
+                                              selectedServicesList =
+                                                  selectedList;
+                                              // print(selectedMonthList);
+                                            });
+                                          },
+                                          maxSelection: 1,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20.0,
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: 8.0, left: 8.0, right: 8.0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "Description:",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          // fontFamily: "Roboto",
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 15),
+                                    ),
+                                  ),
+                                ),
+                                TextField(
+                                  controller: descriptionController,
+                                  style:
+                                      const TextStyle(color: Color(0xFFbdc6cf)),
+                                  decoration: const InputDecoration(
+                                    filled: true,
+                                    fillColor: Color(0xFF36306D),
+                                    border: OutlineInputBorder(),
+                                    hintText:
+                                        'Enter a description of the help(optional)',
+                                  ),
+                                  keyboardType: TextInputType.multiline,
+                                  maxLines: 2,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      RedButton(
+                                        width: _width * 0.3,
+                                        label: "Cancel",
+                                        onPress: () {
+                                          isSwipeRight = false;
+                                        },
+                                      ),
+                                      ButtonWidget(
+                                        width: _width * 0.3,
+                                        label: "Help",
+                                        onPress: () {
+                                          isSwipeRight = false;
+                                          // addHelpToList();
+                                          setState(() {
+                                            print(descriptionController.text
+                                                .trim());
+                                            createHelp();
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -845,10 +1159,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             //   ],
                             // ),
 
-                            // rangeValue == false
-                            //     ? Container()
-                            //     : 
-                                StreamBuilder<List<Helps>>(
+                            rangeValue == false
+                                ? Container()
+                                : StreamBuilder<List<Helps>>(
                                     stream: readHelps(showService, range, 10),
                                     builder: (context, snapshot) {
                                       print("0000000000000 $showService");
