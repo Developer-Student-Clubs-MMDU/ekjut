@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ekjut/models/pointers_position.dart';
+import 'package:ekjut/pages/map.dart';
 import 'package:ekjut/pages/wating_help.dart';
 import 'package:ekjut/wigets/userlocation.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -39,7 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isSwipeRight = false;
   bool isTap = false;
   int i = 0;
-  List<String> selectedServicesList = [];
+  late Range range;
+  bool rangeValue = false;
+  List<String> selectedServicesList = ['Donate Blood'];
   List<Map<String, dynamic>> serviceList = [];
   TextEditingController descriptionController = TextEditingController();
 
@@ -64,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'location': loc,
     });
     // descriptionController.text = "";
-    context.read<ChangeLocation>().afterAddHelp();
+    // context.read<ChangeLocation>().afterAddfHelp();
   }
 
   @override
@@ -105,16 +110,19 @@ class _HomeScreenState extends State<HomeScreen> {
     UserLocation location = UserLocation();
     list = await location.getUserLocation();
     print("xxxxxxxxxxxxxxxxxxxx$list");
-
+    range = georange.geohashRange(list[0], list[1], distance: 10);
+    setState(() {
+      rangeValue = true;
+    });
     return list;
   }
 
-  String showService = "Service 1";
+  String showService = "Car Pool";
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   // late Range range = georange.geohashRange(list[0], list[1], distance: 10);
-  late Range range =
-      georange.geohashRange(28.6697905, 77.3439278, distance: 10);
+
   List<dynamic> fivePointers = [];
+  List<dynamic> tempPointers = [];
   @override
   Widget build(BuildContext context) {
     // Future<void> addUser() {
@@ -132,13 +140,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // TO DO : UPDATE LOCATION OF USER
     context.watch<Help>().updateDistance([0, 0]);
-    
 
     final _userLocation = TextEditingController();
 
     final _height = MediaQuery.of(context).size.height;
     final _width = MediaQuery.of(context).size.width;
-    final user;
+    final user = FirebaseAuth.instance.currentUser;
     // return StreamBuilder<QuerySnapshot>(
     //     stream: FirebaseFirestore.instance.collection("helps").snapshots(),
     //     // stream: readHelps(),
@@ -165,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
         key: _scaffoldState,
         drawer: Drawer(
           child: ListView(padding: EdgeInsets.zero, children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(8.0),
               child: ListTile(
                 leading: CircleAvatar(
@@ -173,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   backgroundColor: Colors.amber,
                 ),
                 title: Text(
-                  'Sundhar Pichai',
+                  '${user?.email.toString()}',
                   style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold,
@@ -356,7 +363,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   size: 20.0,
                 ),
 
-                //1
+                // 1
                 BuildCircle(opacity: 0.7, radius: _width * 0.35),
                 //2
                 BuildCircle(opacity: 0.6, radius: _width * 0.55),
@@ -364,7 +371,37 @@ class _HomeScreenState extends State<HomeScreen> {
                 BuildCircle(opacity: 0.5, radius: _width * 0.80),
                 //4
                 BuildCircle(opacity: 0.3, radius: _width * 1.5),
-                StreamBuilder(
+
+                // stream builder for data
+                // StreamBuilder(
+                //     stream: FirebaseFirestore.instance
+                //         .collection("helps")
+                //         // .where("services", arrayContainsAny: [showService])
+                //         // .where("locHash", isGreaterThanOrEqualTo: range.lower)
+                //         // .where("locHash", isLessThanOrEqualTo: range.upper)
+                //         // .limit(5)
+                //         .snapshots(),
+                //     builder: (BuildContext context,
+                //         AsyncSnapshot<QuerySnapshot> snapshot) {
+                //       print(
+                //           '==========================================================');
+                //       print(snapshot.data);
+                //       print(snapshot.data?.docs);
+                //       // snapshot.data?.docs.forEach((element) {
+                //       //   print(element);
+                //       // });
+                //       if (!snapshot.hasData) return CircularProgressIndicator();
+                //       var docs = snapshot.data?.docs;
+                //       return ListView(
+                //         children: docs == null
+                //             ? [CircularProgressIndicator()]
+                //             : docs.map((doc) {
+                //                 print(doc);
+                //                 return Text('hello');
+                //               }).toList(),
+                //       );
+                //     }),
+                StreamBuilder<QuerySnapshot>(
                   // stream: readHelps(showService, range, 5),
                   stream: FirebaseFirestore.instance
                       .collection("helps")
@@ -373,74 +410,104 @@ class _HomeScreenState extends State<HomeScreen> {
                       // .where("locHash", isLessThanOrEqualTo: range.upper)
                       .limit(5)
                       .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else if (snapshot.connectionState ==
-                        ConnectionState.done) {
-                      return Text('done');
-                    } else if (snapshot.hasError) {
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    //  var docs = snapshot.data?.doc.map(doc => doc.data());
+                    //  print(docs);
+                    // print(
+                    //     '=================================================================');
+                    // print(snapshot.data);
+                    // print(
+                    //     '=================================================================');
+                    // if (snapshot.connectionState == ConnectionState.waiting) {
+                    //   return CircularProgressIndicator();
+                    // } else if (snapshot.connectionState ==
+                    //     ConnectionState.done) {
+                    //   return Text('done');
+                    // } else
+                    if (snapshot.hasError) {
                       return Text('Error!');
-                    } else {
-                      fivePointers.add(snapshot.data);
-                      print(
-                          fivePointers); //print every second: [0] then [0,1] then [0,1,2] ...
-                      return ListView.builder(
-                        itemBuilder: (context, index) {
-                          return Positioned(
-                            top: pointerPos[index][0],
-                            left: pointerPos[index][1],
-                            child: IconButton(
-                              color: Colors.purple,
-                              icon: const Icon(
-                                Icons.person_pin,
-                                size: 40,
-                              ),
-                              onPressed: () {
-                                //  Navigator.push(
-                                //         context,
-                                //         MaterialPageRoute(
-                                //           builder: (context) => MapsPage(
-
-                                //               personLocation: latLng.LatLng(help.location.latitude, help.location.longitude), index: index,
-                                //                   ),
-                                //         ),
-                                //       );
-                              },
-                            ),
-                          );
-                        },
-                        itemCount: fivePointers.length,
-                      );
+                    } else if (!snapshot.hasData) {
+                      return Container();
                     }
+                    // if(fivePointers.length == tempPointers.length){
+                    //   fivePointers = tempPointers;
+                    // }
+                    // else
+                    // tempPointers.add(snapshot.data);
+                    // fivePointers = tempPointers;
+                    // tempPointers = [];
+                    //print every second: [0] then [0,1] then [0,1,2] ...
+                    GeoRange georange = GeoRange();
+                    return ListView.builder(
+                      itemBuilder: (context, index) {
+                        // print(snapshot.data?.docs);
+                        // print('***************************************************');
+                        // print(pointerPos[index][0]);
+                        // print(pointerPos[index][1]);
+                        // print('***************************************************');
+                        return Positioned(
+                          top: pointerPos[index][0],
+                          left: pointerPos[index][1],
+                          child: IconButton(
+                            color: Colors.purple,
+                            icon: const Icon(
+                              Icons.person_pin,
+                              size: 40,
+                            ),
+                            onPressed: () {
+                              var help = Helps(
+                                desc: snapshot.data?.docs[index]["desc"],
+                                inProgress: false,
+                                locHash: snapshot.data?.docs[index]["locHash"],
+                                location: snapshot.data?.docs[index]
+                                    ["location"],
+                                uid: snapshot.data?.docs[index]["uid"],
+                                services: snapshot.data?.docs[index]
+                                    ["services"],
+                                time: snapshot.data?.docs[index]["time"],
+                              );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MapsPage(help: help),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      itemCount: snapshot.data?.docs.length,
+                    );
+
+                    // fivePointeRrs.clear();
                   },
                 ),
 
-                const Positioned(
-                  top: 200,
-                  left: 200,
-                  child: BuildPeople(id: "Mohit", index: 0),
-                ),
-                const Positioned(
-                  top: 390,
-                  left: 230,
-                  child: BuildPeople(id: "Sakshi", index: 1),
-                ),
-                const Positioned(
-                  top: 300,
-                  left: 120,
-                  child: BuildPeople(id: "XYZ", index: 2),
-                ),
-                const Positioned(
-                  top: 450,
-                  left: 100,
-                  child: BuildPeople(id: "ABC", index: 3),
-                ),
-                const Positioned(
-                  top: 500,
-                  left: 200,
-                  child: BuildPeople(id: "QWDUI", index: 4),
-                ),
+                // const Positioned(
+                //   top: 200,
+                //   left: 200,
+                //   child: BuildPeople(id: "Mohit", index: 0),
+                // ),
+                // const Positioned(
+                //   top: 390,
+                //   left: 230,
+                //   child: BuildPeople(id: "Sakshi", index: 1),
+                // ),
+                // const Positioned(
+                //   top: 300,
+                //   left: 120,
+                //   child: BuildPeople(id: "XYZ", index: 2),
+                // ),
+                // const Positioned(
+                //   top: 450,
+                //   left: 100,
+                //   child: BuildPeople(id: "ABC", index: 3),
+                // ),
+                // const Positioned(
+                //   top: 500,
+                //   left: 200,
+                //   child: BuildPeople(id: "QWDUI", index: 4),
+                // ),
                 AnimatedPositioned(
                   curve: Curves.decelerate,
                   top: _height * 0.1,
@@ -778,40 +845,45 @@ class _HomeScreenState extends State<HomeScreen> {
                             //   ],
                             // ),
 
-                            StreamBuilder<List<Helps>>(
-                              stream: readHelps(showService, range, 10),
-                              builder: (context, snapshot) {
-                                print("0000000000000 $showService");
-                                // print("00000000000000000000000000");
+                            // rangeValue == false
+                            //     ? Container()
+                            //     : 
+                                StreamBuilder<List<Helps>>(
+                                    stream: readHelps(showService, range, 10),
+                                    builder: (context, snapshot) {
+                                      print("0000000000000 $showService");
+                                      print("00000000000000000000000000");
 
-                                print(snapshot);
-                                // print("00000000000000000000000000");
+                                      print(snapshot);
+                                      print(snapshot.hasData);
+                                      print("00000000000000000000000000");
 
-                                if (snapshot.hasError) {
-                                  print("000000000000000000000000");
-                                  return Text(
-                                      "something went wrong ${snapshot.error}");
-                                } else if (snapshot.hasData) {
-                                  print("has data");
-                                  final helps = snapshot.data!;
-                                  print("currently data fetching is $helps");
-                                  return Container(
-                                    height: 500 - 232 - 92,
-                                    child: ListView(
-                                      children:
-                                          // helps.map(buildHelp).toList(),
-                                          helps
-                                              .map((value) =>
-                                                  buildHelp(value, context))
-                                              .toList(),
-                                    ),
-                                  );
-                                } else {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
-                                }
-                              },
-                            )
+                                      if (snapshot.hasError) {
+                                        // print("000000000000000000000000");
+                                        return Text(
+                                            "something went wrong ${snapshot.error}");
+                                      } else if (snapshot.hasData) {
+                                        print("has data");
+                                        final helps = snapshot.data!;
+                                        print(
+                                            "currently data fetching is $helps");
+                                        return Container(
+                                          height: 500 - 232 - 92,
+                                          child: ListView(
+                                            children:
+                                                // helps.map(buildHelp).toList(),
+                                                helps
+                                                    .map((value) => buildHelp(
+                                                        value, context))
+                                                    .toList(),
+                                          ),
+                                        );
+                                      } else {
+                                        return const Center(
+                                            child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  )
 
                             // isSwipeUp && serviceItemSwipUp[i]
                             //     ? Expanded(
@@ -843,16 +915,20 @@ class _HomeScreenState extends State<HomeScreen> {
     GeoRange georange = GeoRange();
 
     final user = FirebaseAuth.instance.currentUser;
-    print('===========================================================================================');
+    print(
+        '===========================================================================================');
     print(user);
-    print('===========================================================================================');
+    print(
+        '===========================================================================================');
     latLng.LatLng loc = context.read<ChangeLocation>().helpPosition;
     // GeoFirePoint location =
     // geo.point(latitude: loc.latitude, longitude: loc.longitude);
-    String locHash = georange.encode(loc.longitude, loc.latitude);
-    final GeoPoint location = GeoPoint(loc.latitude, loc.longitude);
+    String locHash =
+        georange.encode(loc.longitude + 0.001, loc.latitude - 0.00001);
+    final GeoPoint location =
+        GeoPoint(loc.latitude + 0.001, loc.longitude - 0.00001);
     if (user != null) {
-      String x = user.uid;
+      String x = "PLKDopw91yhWrARRaEppv3Ngu6r1";
       // print(descriptionController.text);
       print("enetr the body of create help");
       FirebaseFirestore.instance
@@ -862,7 +938,7 @@ class _HomeScreenState extends State<HomeScreen> {
           .set({
             // 'uid': user.uid,
             "uid": x,
-            "desc": descriptionController.text.trim(),
+            "desc": "Need blood urgently",
             'inProgress': false,
             'location': location,
             "locHash": locHash,

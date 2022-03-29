@@ -73,7 +73,7 @@ class _SignupScreenState extends State<SignupScreen> {
           // context.read<UserDetails?>()!.update(currentUser);
         } catch (e) {
           Fluttertoast.showToast(
-              msg: "Password should be at least 6 characters",
+              msg: e.toString(),
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,

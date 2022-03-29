@@ -65,8 +65,7 @@ class _WatingHelpState extends State<WatingHelp> {
                         WavyAnimatedText("Searching for Help..."),
                       ],
                       isRepeatingAnimation: true,
-                    ),
-                  ),
+                    ),                  ),
                   const SizedBox(height: 100.0),
                   ElevatedButton(
                     onPressed: () {

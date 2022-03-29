@@ -59,13 +59,12 @@ class _MakeProfileState extends State<MakeProfile> {
 
   // selectedServicesList=fetchedUser["services"];
   static List<String> servicesList = [
-    "Service 1",
-    "Service 2",
-    "Service 3",
-    "Service 4",
-    "Service 5",
-    "Service 6",
-    "Service 7"
+    'Car Pool',
+    'Dentist',
+    'Food Bank',
+    'HealthCare',
+    'Donate Blood',
+    'Child Welfare Worker',
   ];
 
   _buildChoiceList() {

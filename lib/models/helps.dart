@@ -136,8 +136,8 @@ Stream<List<Helps>>? readHelps(showService, range, limit) =>
     FirebaseFirestore.instance
         .collection("helps")
         .where("services", arrayContainsAny: [showService])
-        .where("locHash", isGreaterThanOrEqualTo: range.lower)
-        .where("locHash", isLessThanOrEqualTo: range.upper)
+        // .where("locHash", isGreaterThanOrEqualTo: range.lower)
+        // .where("locHash", isLessThanOrEqualTo: range.upper)
         .limit(10)
         .snapshots()
         .map((snapshot) =>
