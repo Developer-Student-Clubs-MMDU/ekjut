@@ -89,6 +89,8 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     timer?.cancel();
     super.dispose();
   }
+  // onPressed: canResendEmail ? sendVerificationEmail : null,
+  //   FirebaseAuth.instance.signOut();
 
   @override
   Widget build(BuildContext context) {
@@ -97,32 +99,87 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     return isEmailVerfied
         ? const HomeScreen()
         : Scaffold(
-            body: Center(
-                child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text("check your email for verfication link"),
-              ElevatedButton(
-                child: const Text("Send Vefirfication email"),
-                onPressed: canResendEmail ? sendVerificationEmail : null,
-                // width: _width * 0.7,
+            body: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      const Color(0xFF36306D).withOpacity(1),
+                      const Color(0xFF1C173D)
+                    ]),
               ),
-              const SizedBox(height: 40),
-              ElevatedButton(
-                child: const Text("Cancel"),
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                  // try {
-                  //   print("hello");
-                  // } catch (err) {
-                  //   print(err);
-                  // }
-                },
-                // width: _width * 0.7,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Icon(
+                        Icons.mark_email_unread_outlined,
+                        color: Colors.white.withOpacity(0.6),
+                        size: 120,
+                      ),
+                    ),
+                    decoration: const BoxDecoration(
+                      // color: Colors.white.withOpacity(0.3),
+                      color: Color(0xFF1C173D),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(100.0),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(
+                      "Check Verfication Email",
+                      style: TextStyle(
+                          color: Colors.white.withOpacity(0.6),
+                          // fontFamily: "Roboto",
+                          fontWeight: FontWeight.w800,
+                          fontSize: 20),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "You must have received an email verification link on your email",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.white.withOpacity(0.6),
+                          // fontFamily: "Roboto",
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: canResendEmail ? sendVerificationEmail : null,
+                      child: const Text('Send Verification Mail'),
+                      style: ElevatedButton.styleFrom(
+                          shape: const StadiumBorder()),
+                    ),
+                  ),
+                  OutlinedButton(
+                    child: Text("Cancel"),
+                    onPressed: () {
+                      FirebaseAuth.instance.signOut();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      side: const BorderSide(width: 2.0, color: Colors.blue),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32.0),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          )));
+            ),
+          );
   }
 
   // Future addUser() async {
