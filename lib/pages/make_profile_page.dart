@@ -104,51 +104,53 @@ class _MakeProfileState extends State<MakeProfile> {
                         topRight: Radius.circular(20.0))),
                 child: Padding(
                   padding: const EdgeInsets.all(18.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Select services",
-                            style: TextStyle(
-                                color: Colors.grey[200],
-                                letterSpacing: 0.5,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                wordSpacing: 1.0),
-                          ),
-                          GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Icon(
-                                Icons.clear,
-                                color: Colors.grey[200],
-                              )),
-                        ],
-                      ),
-                      MultiSelectChip(
-                        servicesList,
-                        onSelectionChanged: (selectedList) {
-                          setState(() {
-                            selectedServicesList = selectedList;
-                            // print(selectedMonthList);
-                          });
-                        },
-                        maxSelection: 7,
-                      ),
-                      ButtonWidget(
-                        label: "Add",
-                        width: 150,
-                        onPress: () {
-                          setState(() {
-                            print("------------------ ${selectedServicesList}");
-                            Navigator.pop(context);
-                          });
-                        },
-                      )
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Select services",
+                              style: TextStyle(
+                                  color: Colors.grey[200],
+                                  letterSpacing: 0.5,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  wordSpacing: 1.0),
+                            ),
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Icon(
+                                  Icons.clear,
+                                  color: Colors.grey[200],
+                                )),
+                          ],
+                        ),
+                        MultiSelectChip(
+                          servicesList,
+                          onSelectionChanged: (selectedList) {
+                            setState(() {
+                              selectedServicesList = selectedList;
+                              // print(selectedMonthList);
+                            });
+                          },
+                          maxSelection: 7,
+                        ),
+                        ButtonWidget(
+                          label: "Add",
+                          width: 150,
+                          onPress: () {
+                            setState(() {
+                              print("------------------ ${selectedServicesList}");
+                              Navigator.pop(context);
+                            });
+                          },
+                        )
+                      ],
+                    ),
                   ),
                 )),
           );
@@ -297,87 +299,89 @@ class _MakeProfileState extends State<MakeProfile> {
                   );
                 },
                 child: context.watch<ChangeLocation>().foundLocation
-                    ? Column(
-                        children: [
-                          Container(
-                            height: 60,
-                            width: double.maxFinite,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6.0),
-                              color: const Color(0xFF1C173D),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.25),
-                                  spreadRadius: 0,
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    FontAwesomeIcons.map,
-                                    size: 18,
-                                    color: Colors.grey[400],
+                    ? SingleChildScrollView(
+                      child: Column(
+                          children: [
+                            Container(
+                              height: 60,
+                              width: double.maxFinite,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6.0),
+                                color: const Color(0xFF1C173D),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.25),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 4),
                                   ),
-                                  const SizedBox(width: 14),
-                                  Text(
-                                    context.watch<ChangeLocation>().source,
-                                    style: TextStyle(
-                                        color: Colors.grey[400],
-                                        fontFamily: "Roboto",
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 12),
-                                  )
                                 ],
                               ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10.0,
-                          ),
-                          Container(
-                            height: 60,
-                            width: double.maxFinite,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6.0),
-                              color: const Color(0xFF1C173D),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.25),
-                                  spreadRadius: 0,
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 4),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.map,
+                                      size: 18,
+                                      color: Colors.grey[400],
+                                    ),
+                                    const SizedBox(width: 14),
+                                    Text(
+                                      context.watch<ChangeLocation>().source,
+                                      style: TextStyle(
+                                          color: Colors.grey[400],
+                                          fontFamily: "Roboto",
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 12),
+                                    )
+                                  ],
                                 ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    FontAwesomeIcons.map,
-                                    size: 18,
-                                    color: Colors.grey[400],
-                                  ),
-                                  const SizedBox(width: 14),
-                                  Text(
-                                    context.watch<ChangeLocation>().destination,
-                                    style: TextStyle(
-                                        color: Colors.grey[400],
-                                        fontFamily: "Roboto",
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 12),
-                                  )
-                                ],
                               ),
                             ),
-                          ),
-                        ],
-                      )
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            Container(
+                              height: 60,
+                              width: double.maxFinite,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6.0),
+                                color: const Color(0xFF1C173D),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.25),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.map,
+                                      size: 18,
+                                      color: Colors.grey[400],
+                                    ),
+                                    const SizedBox(width: 14),
+                                    Text(
+                                      context.watch<ChangeLocation>().destination,
+                                      style: TextStyle(
+                                          color: Colors.grey[400],
+                                          fontFamily: "Roboto",
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 12),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                    )
                     : Container(
                         height: 60,
                         width: double.maxFinite,

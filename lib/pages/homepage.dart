@@ -1046,151 +1046,153 @@ class _HomeScreenState extends State<HomeScreen> {
                             //   ),
                             // ),
 
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      "Help",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          // fontFamily: "Roboto",
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 15),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          isSwipeRight = false;
-                                        });
-                                      },
-                                      child: const Icon(
-                                        Icons.close,
-                                        size: 24,
-                                        color: Colors.white,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Help",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            // fontFamily: "Roboto",
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15),
                                       ),
-                                    )
-                                  ],
-                                ),
-                                // PhysicalModel(
-                                //   color: Color(0xFF1C173D),
-                                //   borderRadius: BorderRadius.circular(12.0),
-                                //   elevation: 3.5,
-                                //   child: TextField(
-                                //       controller: _userLocation,
-                                //       decoration: InputDecoration(
-                                //           label: Text("Location"))),
-                                // ),
-                                // InputWidget(
-                                //   icon: FontAwesomeIcons.map,
-                                //   label: 'Location',
-                                //   controller: _userLocation,
-                                // ),
-
-                                const SearchViewInput(),
-                                const SizedBox(
-                                  height: 20.0,
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Services:",
-                                      style: TextStyle(
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            isSwipeRight = false;
+                                          });
+                                        },
+                                        child: const Icon(
+                                          Icons.close,
+                                          size: 24,
                                           color: Colors.white,
-                                          // fontFamily: "Roboto",
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 15),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  // PhysicalModel(
+                                  //   color: Color(0xFF1C173D),
+                                  //   borderRadius: BorderRadius.circular(12.0),
+                                  //   elevation: 3.5,
+                                  //   child: TextField(
+                                  //       controller: _userLocation,
+                                  //       decoration: InputDecoration(
+                                  //           label: Text("Location"))),
+                                  // ),
+                                  // InputWidget(
+                                  //   icon: FontAwesomeIcons.map,
+                                  //   label: 'Location',
+                                  //   controller: _userLocation,
+                                  // ),
+
+                                  const SearchViewInput(),
+                                  const SizedBox(
+                                    height: 20.0,
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "Services:",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            // fontFamily: "Roboto",
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  height: 50,
-                                  child: Expanded(
-                                    child: ListView(
-                                      scrollDirection: Axis.horizontal,
+                                  Container(
+                                    height: 50,
+                                    child: Expanded(
+                                      child: ListView(
+                                        scrollDirection: Axis.horizontal,
+                                        children: [
+                                          MultiSelectChip(
+                                            servicesItem,
+                                            onSelectionChanged: (selectedList) {
+                                              setState(() {
+                                                selectedServicesList =
+                                                    selectedList;
+                                                // print(selectedMonthList);
+                                              });
+                                            },
+                                            maxSelection: 1,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20.0,
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: 8.0, left: 8.0, right: 8.0),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "Description:",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            // fontFamily: "Roboto",
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15),
+                                      ),
+                                    ),
+                                  ),
+                                  TextField(
+                                    controller: descriptionController,
+                                    style:
+                                        const TextStyle(color: Color(0xFFbdc6cf)),
+                                    decoration: const InputDecoration(
+                                      filled: true,
+                                      fillColor: Color(0xFF36306D),
+                                      border: OutlineInputBorder(),
+                                      hintText:
+                                          'Enter a description of the help(optional)',
+                                    ),
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: 2,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        MultiSelectChip(
-                                          servicesItem,
-                                          onSelectionChanged: (selectedList) {
+                                        RedButton(
+                                          width: _width * 0.3,
+                                          label: "Cancel",
+                                          onPress: () {
+                                            isSwipeRight = false;
+                                          },
+                                        ),
+                                        ButtonWidget(
+                                          width: _width * 0.3,
+                                          label: "Help",
+                                          onPress: () {
+                                            isSwipeRight = false;
+                                            // addHelpToList();
                                             setState(() {
-                                              selectedServicesList =
-                                                  selectedList;
-                                              // print(selectedMonthList);
+                                              print(descriptionController.text
+                                                  .trim());
+                                              createHelp();
                                             });
                                           },
-                                          maxSelection: 1,
                                         ),
                                       ],
                                     ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 20.0,
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom: 8.0, left: 8.0, right: 8.0),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Description:",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          // fontFamily: "Roboto",
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 15),
-                                    ),
-                                  ),
-                                ),
-                                TextField(
-                                  controller: descriptionController,
-                                  style:
-                                      const TextStyle(color: Color(0xFFbdc6cf)),
-                                  decoration: const InputDecoration(
-                                    filled: true,
-                                    fillColor: Color(0xFF36306D),
-                                    border: OutlineInputBorder(),
-                                    hintText:
-                                        'Enter a description of the help(optional)',
-                                  ),
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: 2,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      RedButton(
-                                        width: _width * 0.3,
-                                        label: "Cancel",
-                                        onPress: () {
-                                          isSwipeRight = false;
-                                        },
-                                      ),
-                                      ButtonWidget(
-                                        width: _width * 0.3,
-                                        label: "Help",
-                                        onPress: () {
-                                          isSwipeRight = false;
-                                          // addHelpToList();
-                                          setState(() {
-                                            print(descriptionController.text
-                                                .trim());
-                                            createHelp();
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ],

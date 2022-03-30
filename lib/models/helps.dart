@@ -71,10 +71,10 @@ Widget buildHelp(Helps help, BuildContext context) =>
           backgroundColor: Color.fromRGBO(26, 41, 128, 100),
           collapsedBackgroundColor: const Color.fromRGBO(26, 41, 128, 100),
           title: Text(
-            help.uid,
+            help.desc,
             style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
           ),
-          subtitle: Text(help.uid),
+          subtitle: Text('${help.services[0].toString()}'),
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(left: 18.0, bottom: 8.0),

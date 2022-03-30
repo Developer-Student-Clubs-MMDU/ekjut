@@ -208,50 +208,52 @@ class _GetMyLocationState extends State<GetMyLocation> {
     return Scaffold(
       backgroundColor: const Color(0xFF36306D).withOpacity(1),
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            context.watch<ChangeLocation>().foundLocation
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const GetMyTimings()
-                                // : const SignupScreen(),
-                                ),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              context.watch<ChangeLocation>().foundLocation
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const GetMyTimings()
+                                  // : const SignupScreen(),
+                                  ),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 10.0,
-                      ),
-                      const Text(
-                        'Select Your Timings ',
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  )
-                : Container(),
-            SearchView(
-              wantSuggestions: yourLocationSuggetsions,
-              hintText: 'Your Current  Location',
-              indicatorNode: 0,
-            ),
-            SearchView(
-              wantSuggestions: sourceLocationSuggestions,
-              hintText: 'Destination Location ',
-              indicatorNode: 1,
-            ),
-            Expanded(child: HereMap(onMapCreated: _onMapCreated))
-          ],
+                        const SizedBox(
+                          width: 10.0,
+                        ),
+                        const Text(
+                          'Select Your Timings ',
+                          style: TextStyle(color: Colors.white),
+                        )
+                      ],
+                    )
+                  : Container(),
+              SearchView(
+                wantSuggestions: yourLocationSuggetsions,
+                hintText: 'Your Current  Location',
+                indicatorNode: 0,
+              ),
+              SearchView(
+                wantSuggestions: sourceLocationSuggestions,
+                hintText: 'Destination Location ',
+                indicatorNode: 1,
+              ),
+              Expanded(child: HereMap(onMapCreated: _onMapCreated))
+            ],
+          ),
         ),
       ),
     );
