@@ -438,7 +438,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     // tempPointers = [];
                     //print every second: [0] then [0,1] then [0,1,2] ...
                     GeoRange georange = GeoRange();
-                    return ListView.builder(
+                    return 
+                    ListView.builder(
                       itemBuilder: (context, index) {
                         // print(snapshot.data?.docs);
                         // print('***************************************************');
@@ -845,9 +846,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             //   ],
                             // ),
 
-                            // rangeValue == false
-                            //     ? Container()
-                            //     : 
+                            rangeValue == false
+                                ? Container()
+                                : 
                                 StreamBuilder<List<Helps>>(
                                     stream: readHelps(showService, range, 10),
                                     builder: (context, snapshot) {
@@ -936,8 +937,8 @@ class _HomeScreenState extends State<HomeScreen> {
           // .doc(user.uid)
           .doc(x)
           .set({
-            // 'uid': user.uid,
-            "uid": x,
+            'uid': user.uid,
+            // "uid": x,
             "desc": "Need blood urgently",
             'inProgress': false,
             'location': location,

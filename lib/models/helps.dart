@@ -19,6 +19,7 @@ class Helps {
   String helperUid = "";
   Timestamp helperStartedHelp = Timestamp.now();
   int estimatedTime = 0;
+  late GeoPoint helperPosition;
 
   Helps(
       {required this.locHash,

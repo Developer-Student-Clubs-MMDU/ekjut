@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ekjut/pages/helping_is_going.dart';
 import 'package:ekjut/pages/homepage.dart';
 import 'package:ekjut/wigets/ripple_animation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'dart:async';
 
 class WatingHelp extends StatefulWidget {
   const WatingHelp({Key? key}) : super(key: key);
@@ -13,6 +15,37 @@ class WatingHelp extends StatefulWidget {
 }
 
 class _WatingHelpState extends State<WatingHelp> {
+  final user = FirebaseAuth.instance.currentUser;
+  late Timer _timer;
+  void checkHelper() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(oneSec, (Timer timer) {
+      FirebaseFirestore.instance
+          .collection("helps")
+          // .doc("PLKDopw91yhWrARRaEppv3Ngu6r1")
+          .doc(user?.uid)
+          .get()
+          .then((snapshot) {
+        if (snapshot.data()!["inProgress"] == true) {
+          _timer.cancel();
+          var loc = snapshot.data()!["location"];
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      OnGoingHelpPage(list: [loc.latitude, loc.longitude])));
+        }
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkHelper();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,14 +98,17 @@ class _WatingHelpState extends State<WatingHelp> {
                         WavyAnimatedText("Searching for Help..."),
                       ],
                       isRepeatingAnimation: true,
-                    ),                  ),
+                    ),
+                  ),
                   const SizedBox(height: 100.0),
                   ElevatedButton(
                     onPressed: () {
                       final user = FirebaseAuth.instance.currentUser;
-                      print('================================================= $user');
+                      print(
+                          '================================================= $user');
                       print(user?.uid);
-                      print('======================================================');
+                      print(
+                          '======================================================');
                       FirebaseFirestore.instance
                           .collection('helps')
                           .doc(user?.uid)

@@ -59,8 +59,11 @@ class _MapsPageState extends State<MapsPage> {
     List<Map<String, dynamic>> helps = context.read<Help>().helps;
     _hereMapController.pinWidget(
         GestureDetector(
-          onTap: () {
+          onTap: ()async {
             if (helps.isEmpty) return;
+            double distanceInMeters = await Geolocator.distanceBetween(
+          list[0], list[1], widget.help.location.latitude, widget.help.location.longitude);
+      helps[i]['distance'] = distanceInMeters.toInt();
             showDialog(
               context: context,
               builder: (ctx) => AlertDialog(
@@ -70,16 +73,12 @@ class _MapsPageState extends State<MapsPage> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Text('Help Needed : ${widget.help.desc}',
-                            style: const TextStyle(
-                              fontSize: 20.0,
-                            )),
-                        Text('Description : ${widget.help.desc.toString()}',
+                        Text('Help : ${widget.help.desc.toString()}',
                             style: const TextStyle(
                               fontSize: 20.0,
                             )),
                         Text(
-                            'Distance From You : ${widget.help.location.toString()}',
+                            'Distance From You : ${distanceInMeters.toString()}',
                             style: const TextStyle(
                               fontSize: 20.0,
                             )),
@@ -92,7 +91,7 @@ class _MapsPageState extends State<MapsPage> {
                                     widget.help.location.longitude);
                                 // removeItemFromHelpList(widget.index);
                                 acknowledgedHelp = true;
-                                checkHelper();
+                                // checkHelper();
                                 setState(() {});
                                 Navigator.pop(ctx);
                               },
@@ -193,6 +192,7 @@ class _MapsPageState extends State<MapsPage> {
                 .doc(widget.help.uid)
                 .update({
                   "helperUid": user.uid,
+                  "helperPosition": GeoPoint(list[0], list[1]),
                   "inProgress": true,
                   "helperStartedHelp": Timestamp.now(),
                   "estimatedTime": 1500
@@ -308,38 +308,38 @@ class _MapsPageState extends State<MapsPage> {
 
   // function to check whether the helper has taken more time from estimated time or not
   late Timer _timer;
-  void checkHelper() {
-    int startTime = Timestamp.now().seconds;
-    int estimatedTime = 0;
-    FirebaseFirestore.instance
-        .collection("helps")
-        .doc(widget.help.uid)
-        .get()
-        .then((snapshot) {
-      startTime = snapshot.data()!["helperStartedHelp"].seconds;
-      estimatedTime = snapshot.data()!["estimatedTime"];
-    });
+  // void checkHelper() {
+  //   int startTime = Timestamp.now().seconds;
+  //   int estimatedTime = 0;
+  //   FirebaseFirestore.instance
+  //       .collection("helps")
+  //       .doc(widget.help.uid)
+  //       .get()
+  //       .then((snapshot) {
+  //     startTime = snapshot.data()!["helperStartedHelp"].seconds;
+  //     estimatedTime = snapshot.data()!["estimatedTime"];
+  //   });
 
-    int totalTime = startTime + estimatedTime + 50;
-    print('$startTime , $estimatedTime , $totalTime');
-    const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(oneSec, (Timer timer) {
-      int now = Timestamp.now().seconds;
-      setState(() {
-        timeElapsed = totalTime - now;
-      });
-      if (totalTime <= now) {
-        print('$startTime , $estimatedTime , $totalTime');
-        print('${totalTime} , ${now}, ${totalTime - now} ');
-        print('cancellled');
-        _timer.cancel();
-        confirmHelper(estimatedTime);
-      } else {
-        print('$startTime , $estimatedTime , $totalTime');
-        print('Time remaining ${totalTime} , ${now}, ${totalTime - now}');
-      }
-    });
-  }
+  //   int totalTime = startTime + estimatedTime + 50;
+  //   print('$startTime , $estimatedTime , $totalTime');
+  //   const oneSec = Duration(seconds: 1);
+  //   _timer = Timer.periodic(oneSec, (Timer timer) {
+  //     int now = Timestamp.now().seconds;
+  //     setState(() {
+  //       timeElapsed = totalTime - now;
+  //     });
+  //     if (totalTime <= now) {
+  //       print('$startTime , $estimatedTime , $totalTime');
+  //       print('${totalTime} , ${now}, ${totalTime - now} ');
+  //       print('cancellled');
+  //       _timer.cancel();
+  //       confirmHelper(estimatedTime);
+  //     } else {
+  //       print('$startTime , $estimatedTime , $totalTime');
+  //       print('Time remaining ${totalTime} , ${now}, ${totalTime - now}');
+  //     }
+  //   });
+  // }
 
   void confirmHelper(int estimatedTime) {
     showDialog(
@@ -377,7 +377,7 @@ class _MapsPageState extends State<MapsPage> {
                       .update({
                     "estimatedTime": estimatedTime + 50,
                   });
-                  checkHelper();
+                  // checkHelper();
                   Navigator.pop(context);
                 },
                 child: const Text('OK'),
