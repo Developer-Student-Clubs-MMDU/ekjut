@@ -46,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> selectedServicesList = ['Donate Blood'];
   List<Map<String, dynamic>> serviceList = [];
   TextEditingController descriptionController = TextEditingController();
+  List<Helps> helps = [];
 
   selectServices(String service) {
     serviceList = Provider.of<Help>(context, listen: false).getService(service);
@@ -491,93 +492,186 @@ class _HomeScreenState extends State<HomeScreen> {
                 //               }).toList(),
                 //       );
                 //     }),
-<<<<<<< HEAD
                 StreamBuilder<QuerySnapshot>(
-                  // stream: readHelps(showService, range, 5),
-                  stream: FirebaseFirestore.instance
-                      .collection("helps")
-                      // .where("services", arrayContainsAny: [showService])
-                      // .where("locHash", isGreaterThanOrEqualTo: range.lower)
-                      // .where("locHash", isLessThanOrEqualTo: range.upper)
-                      .limit(5)
-                      .snapshots(),
-                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    //  var docs = snapshot.data?.doc.map(doc => doc.data());
-                    //  print(docs);
-                    // print(
-                    //     '=================================================================');
-                    // print(snapshot.data);
-                    // print(
-                    //     '=================================================================');
-                    // if (snapshot.connectionState == ConnectionState.waiting) {
-                    //   return CircularProgressIndicator();
-                    // } else if (snapshot.connectionState ==
-                    //     ConnectionState.done) {
-                    //   return Text('done');
-                    // } else
-                    if (snapshot.hasError) {
-                      return Text('Error!');
-                    } else if (!snapshot.hasData) {
-                      return Container();
-                    }
-                    // if(fivePointers.length == tempPointers.length){
-                    //   fivePointers = tempPointers;
-                    // }
-                    // else
-                    // tempPointers.add(snapshot.data);
-                    // fivePointers = tempPointers;
-                    // tempPointers = [];
-                    //print every second: [0] then [0,1] then [0,1,2] ...
-                    GeoRange georange = GeoRange();
-                    return 
-                    ListView.builder(
-                      itemBuilder: (context, index) {
-                        // print(snapshot.data?.docs);
-                        // print('***************************************************');
-                        // print(pointerPos[index][0]);
-                        // print(pointerPos[index][1]);
-                        // print('***************************************************');
-                        return Positioned(
-                          top: pointerPos[index][0],
-                          left: pointerPos[index][1],
-                          child: IconButton(
-                            color: Colors.purple,
-                            icon: const Icon(
-                              Icons.person_pin,
-                              size: 40,
-                            ),
-                            onPressed: () {
-                              var help = Helps(
-                                desc: snapshot.data?.docs[index]["desc"],
-                                inProgress: false,
-                                locHash: snapshot.data?.docs[index]["locHash"],
-                                location: snapshot.data?.docs[index]
-                                    ["location"],
-                                uid: snapshot.data?.docs[index]["uid"],
-                                services: snapshot.data?.docs[index]
-                                    ["services"],
-                                time: snapshot.data?.docs[index]["time"],
-                              );
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MapsPage(help: help),
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                      itemCount: snapshot.data?.docs.length,
-                    );
-=======
->>>>>>> 78b0048dba5636cb892531dc480e8b89fbc5e6dc
+                    // stream: readHelps(showService, range, 5),
+                    stream: FirebaseFirestore.instance
+                        .collection("helps")
+                        // .where("services", arrayContainsAny: [showService])
+                        // .where("locHash", isGreaterThanOrEqualTo: range.lower)
+                        // .where("locHash", isLessThanOrEqualTo: range.upper)
+                        .limit(5)
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      //  var docs = snapshot.data?.doc.map(doc => doc.data());
+                      //  print(docs);
+                      // print(
+                      //     '=================================================================');
+                      // print(snapshot.data);
+                      // print(
+                      //     '=================================================================');
+                      // if (snapshot.connectionState == ConnectionState.waiting) {
+                      //   return CircularProgressIndicator();
+                      // } else if (snapshot.connectionState ==
+                      //     ConnectionState.done) {
+                      //   return Text('done');
+                      // } else
+                      if (snapshot.hasError) {
+                        return Text('Error!');
+                      } else if (!snapshot.hasData) {
+                        return Container();
+                      }
+                      // if(fivePointers.length == tempPointers.length){
+                      //   fivePointers = tempPointers;
+                      // }
+                      // else
+                      // tempPointers.add(snapshot.data);
+                      // fivePointers = tempPointers;
+                      // tempPointers = [];
+                      //print every second: [0] then [0,1] then [0,1,2] ...
 
-                for (int i = 0; i < 5; i++)
-                  Positioned(
-                      left: pointerPos[i][0],
-                      right: pointerPos[i][1],
-                      child: Text("i"))
+                      GeoRange georange = GeoRange();
+
+                      int? len = snapshot.data?.docs.length;
+                      len == null ? 0 : len;
+                      for (int index = 0; index < len! + 0; index++) {
+                        var help = Helps(
+                          desc: snapshot.data?.docs[index]["desc"],
+                          inProgress: false,
+                          locHash: snapshot.data?.docs[index]["locHash"],
+                          location: snapshot.data?.docs[index]["location"],
+                          uid: snapshot.data?.docs[index]["uid"],
+                          services: snapshot.data?.docs[index]["services"],
+                          time: snapshot.data?.docs[index]["time"],
+                        );
+                        helps.add(help);
+                      }
+                      return Container();
+                      // return ListView.builder(
+                      //   itemBuilder: (context, index) {
+                      //     // print(snapshot.data?.docs);
+                      //     // print('***************************************************');
+                      //     // print(pointerPos[index][0]);
+                      //     // print(pointerPos[index][1]);
+                      //     // print('***************************************************');
+                      //     return Positioned(
+                      //       top: pointerPos[index][0],
+                      //       left: pointerPos[index][1],
+                      //       child: IconButton(
+                      //         color: Colors.purple,
+                      //         icon: const Icon(
+                      //           Icons.person_pin,
+                      //           size: 40,
+                      //         ),
+                      //         onPressed: () {
+                      //           var help = Helps(
+                      //             desc: snapshot.data?.docs[index]["desc"],
+                      //             inProgress: false,
+                      //             locHash: snapshot.data?.docs[index]
+                      //                 ["locHash"],
+                      //             location: snapshot.data?.docs[index]
+                      //                 ["location"],
+                      //             uid: snapshot.data?.docs[index]["uid"],
+                      //             services: snapshot.data?.docs[index]
+                      //                 ["services"],
+                      //             time: snapshot.data?.docs[index]["time"],
+                      //           );
+                      //           Navigator.push(
+                      //             context,
+                      //             MaterialPageRoute(
+                      //               builder: (context) => MapsPage(help: help),
+                      //             ),
+                      //           );
+                      //         },
+                      //       ),
+                      //     );
+                      //   },
+                      //   itemCount: snapshot.data?.docs.length,
+                      // );
+                    }),
+                helps.length <= 0
+                    ? Container()
+                    : Positioned(
+                        top: pointerPos[0][0],
+                        left: pointerPos[0][1],
+                        child: IconButton(
+                          color: Colors.purple,
+                          icon: const Icon(
+                            Icons.person_pin,
+                            size: 40,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MapsPage(help: helps[0]),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                helps.length <= 0
+                    ? Container()
+                    : Positioned(
+                        top: pointerPos[1][0],
+                        left: pointerPos[1][1],
+                        child: IconButton(
+                          color: Colors.purple,
+                          icon: const Icon(
+                            Icons.person_pin,
+                            size: 40,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MapsPage(help: helps[1]),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                helps.length <= 0
+                    ? Container()
+                    : Positioned(
+                        top: pointerPos[2][0],
+                        left: pointerPos[2][1],
+                        child: IconButton(
+                          color: Colors.purple,
+                          icon: const Icon(
+                            Icons.person_pin,
+                            size: 40,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MapsPage(help: helps[2]),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                helps.length <= 0
+                    ? Container()
+                    : Positioned(
+                        top: pointerPos[3][0],
+                        left: pointerPos[3][1],
+                        child: IconButton(
+                          color: Colors.purple,
+                          icon: const Icon(
+                            Icons.person_pin,
+                            size: 40,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MapsPage(help: helps[3]),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                 // // StreamBuilder<QuerySnapshot>(
                 //   // stream: readHelps(showService, range, 5),
                 //   stream: FirebaseFirestore.instance
@@ -755,7 +849,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 //   left: 200,
                 //   child: BuildPeople(id: "QWDUI", index: 4),
                 // ),
-                ,
+
                 AnimatedPositioned(
                   curve: Curves.decelerate,
                   top: _height * 0.1,
@@ -1242,12 +1336,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             rangeValue == false
                                 ? Container()
-<<<<<<< HEAD
-                                : 
-                                StreamBuilder<List<Helps>>(
-=======
                                 : StreamBuilder<List<Helps>>(
->>>>>>> 78b0048dba5636cb892531dc480e8b89fbc5e6dc
                                     stream: readHelps(showService, range, 10),
                                     builder: (context, snapshot) {
                                       print("0000000000000 $showService");
@@ -1332,12 +1421,12 @@ class _HomeScreenState extends State<HomeScreen> {
       print("enetr the body of create help");
       FirebaseFirestore.instance
           .collection("helps")
-          // .doc(user.uid)
-          .doc(x)
+          .doc(user.uid)
+          // .doc(x)
           .set({
             'uid': user.uid,
             // "uid": x,
-            "desc": "Need blood urgently",
+            "desc": descriptionController.text,
             'inProgress': false,
             'location': location,
             "locHash": locHash,

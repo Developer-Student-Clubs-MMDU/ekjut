@@ -77,6 +77,10 @@ class _MapsPageState extends State<MapsPage> {
                             style: const TextStyle(
                               fontSize: 20.0,
                             )),
+                        Text('Services : ${widget.help.services[0].toString()}',
+                            style: const TextStyle(
+                              fontSize: 20.0,
+                            )),
                         Text(
                             'Distance From You : ${distanceInMeters.toString()}',
                             style: const TextStyle(

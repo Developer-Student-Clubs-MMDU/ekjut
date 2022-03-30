@@ -99,40 +99,42 @@ class _SignupScreenState extends State<SignupScreen> {
       width: _width,
       height: _height,
       padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: Column(
-        children: [
-          const SizedBox(height: 100),
-          InputWidget(
-            icon: FontAwesomeIcons.userAlt,
-            label: "Email",
-            controller: _emailcontroller,
-          ),
-          const SizedBox(height: 30),
-          InputWidget(
-            icon: FontAwesomeIcons.inbox,
-            label: "Password",
-            controller: _passwordcontroller,
-          ),
-          const SizedBox(height: 30),
-          InputWidget(
-            icon: FontAwesomeIcons.inbox,
-            label: "Confirm Password",
-            controller: _confirmpasswordcontroller,
-          ),
-          const SizedBox(height: 40),
-          ButtonWidget(
-            width: _width * 0.5,
-            label: "Verify Email",
-            onPress: () {
-              try {
-                print("siging up...");
-                signup();
-              } catch (e) {
-                print(e);
-              }
-            },
-          ),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 100),
+            InputWidget(
+              icon: FontAwesomeIcons.userAlt,
+              label: "Email",
+              controller: _emailcontroller,
+            ),
+            const SizedBox(height: 30),
+            InputWidget(
+              icon: FontAwesomeIcons.inbox,
+              label: "Password",
+              controller: _passwordcontroller,
+            ),
+            const SizedBox(height: 30),
+            InputWidget(
+              icon: FontAwesomeIcons.inbox,
+              label: "Confirm Password",
+              controller: _confirmpasswordcontroller,
+            ),
+            const SizedBox(height: 40),
+            ButtonWidget(
+              width: _width * 0.5,
+              label: "Verify Email",
+              onPress: () {
+                try {
+                  print("siging up...");
+                  signup();
+                } catch (e) {
+                  print(e);
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
